@@ -42,6 +42,7 @@ INSTALLED_APPS = [
      "usuarios",
      "zonas",
      "vehiculos",
+     "estacionamientos",
 
 ]
 
@@ -122,3 +123,4 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 AUTH_USER_MODEL = "usuarios.Usuario"
+LOGIN_URL = "usuarios:login"

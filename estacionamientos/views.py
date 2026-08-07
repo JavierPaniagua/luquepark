@@ -1,0 +1,210 @@
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied, ValidationError
+from django.db import IntegrityError, transaction
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
+
+from .forms import (
+    IniciarEstacionamientoForm,
+    VerificarChapaForm,
+)
+from .models import Estacionamiento
+from vehiculos.models import Vehiculo
+
+
+def verificar_conductor(usuario):
+    if not usuario.es_conductor:
+        raise PermissionDenied(
+            "Solo los conductores pueden realizar esta operación."
+        )
+
+def verificar_inspector(usuario):
+    if not usuario.es_inspector:
+        raise PermissionDenied(
+            "Solo los inspectores pueden verificar chapas."
+        )
+@login_required
+def iniciar_estacionamiento(request):
+    verificar_conductor(request.user)
+
+    if request.method == "POST":
+        form = IniciarEstacionamientoForm(
+            request.POST,
+            conductor=request.user,
+        )
+
+        if form.is_valid():
+            try:
+                with transaction.atomic():
+                    estacionamiento = form.save()
+
+                messages.success(
+                    request,
+                    (
+                        "Estacionamiento iniciado correctamente para "
+                        f"{estacionamiento.vehiculo.chapa}."
+                    ),
+                )
+
+                return redirect(
+                    "estacionamientos:activos"
+                )
+
+            except (IntegrityError, ValidationError):
+                form.add_error(
+                    "vehiculo",
+                    (
+                        "No se pudo iniciar el estacionamiento. "
+                        "El vehículo podría tener otro estacionamiento activo."
+                    ),
+                )
+
+    else:
+        form = IniciarEstacionamientoForm(
+            conductor=request.user,
+        )
+
+    return render(
+        request,
+        "estacionamientos/iniciar.html",
+        {"form": form},
+    )
+
+
+@login_required
+def estacionamientos_activos(request):
+    verificar_conductor(request.user)
+
+    estacionamientos = (
+        Estacionamiento.objects.filter(
+            conductor=request.user,
+            estado=Estacionamiento.Estado.ACTIVO,
+        )
+        .select_related(
+            "vehiculo",
+            "zona",
+        )
+        .order_by("-fecha_inicio")
+    )
+
+    return render(
+        request,
+        "estacionamientos/activos.html",
+        {
+            "estacionamientos": estacionamientos,
+        },
+    )
+
+
+@login_required
+@require_POST
+def finalizar_estacionamiento(request, estacionamiento_id):
+    verificar_conductor(request.user)
+
+    try:
+        with transaction.atomic():
+            estacionamiento = get_object_or_404(
+                Estacionamiento.objects.select_for_update(),
+                id=estacionamiento_id,
+                conductor=request.user,
+            )
+
+            estacionamiento.finalizar()
+
+        messages.success(
+            request,
+            (
+                f"Estacionamiento de {estacionamiento.vehiculo.chapa} "
+                f"finalizado. Monto: Gs. {estacionamiento.monto_final}."
+            ),
+        )
+
+    except ValidationError as error:
+        messages.error(
+            request,
+            error.messages[0],
+        )
+
+    return redirect(
+        "estacionamientos:activos"
+    )
+
+@login_required
+def verificar_chapa(request):
+    verificar_inspector(request.user)
+
+    resultado = None
+
+    if request.method == "POST":
+        form = VerificarChapaForm(request.POST)
+
+        if form.is_valid():
+            chapa = form.cleaned_data["chapa"]
+
+            vehiculo = (
+                Vehiculo.objects.filter(
+                    chapa=chapa,
+                    activo=True,
+                )
+                .select_related("propietario")
+                .first()
+            )
+
+            if vehiculo is None:
+                resultado = {
+                    "estado": "NO_REGISTRADO",
+                    "chapa": chapa,
+                    "mensaje": (
+                        "La chapa no se encuentra registrada "
+                        "en LuquePark."
+                    ),
+                }
+
+            else:
+                estacionamiento = (
+                    Estacionamiento.objects.filter(
+                        vehiculo=vehiculo,
+                        estado=Estacionamiento.Estado.ACTIVO,
+                    )
+                    .select_related(
+                        "vehiculo",
+                        "zona",
+                        "conductor",
+                    )
+                    .first()
+                )
+
+                if estacionamiento:
+                    resultado = {
+                        "estado": "ACTIVO",
+                        "chapa": chapa,
+                        "vehiculo": vehiculo,
+                        "estacionamiento": estacionamiento,
+                        "monto_aproximado": (
+                            estacionamiento.calcular_monto()
+                        ),
+                    }
+
+                else:
+                    resultado = {
+                        "estado": "SIN_ESTACIONAMIENTO",
+                        "chapa": chapa,
+                        "vehiculo": vehiculo,
+                        "mensaje": (
+                            "El vehículo está registrado, pero no tiene "
+                            "un estacionamiento activo."
+                        ),
+                    }
+
+    else:
+        form = VerificarChapaForm()
+
+    return render(
+        request,
+        "estacionamientos/verificar_chapa.html",
+        {
+            "form": form,
+            "resultado": resultado,
+        },
+    )
