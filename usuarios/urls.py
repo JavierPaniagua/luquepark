@@ -29,4 +29,10 @@ urlpatterns = [
         views.cerrar_sesion,
         name="logout",
     ),
+
+    path(
+    "service-worker.js",
+    views.service_worker,
+    name="service_worker",
+),
 ]

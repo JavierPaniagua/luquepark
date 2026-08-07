@@ -106,3 +106,15 @@ def cerrar_sesion(request):
     )
 
     return redirect("usuarios:login")
+
+def service_worker(request):
+    response = render(
+        request,
+        "pwa/service-worker.js",
+        content_type="application/javascript",
+    )
+
+    response["Service-Worker-Allowed"] = "/"
+    response["Cache-Control"] = "no-cache"
+
+    return response
