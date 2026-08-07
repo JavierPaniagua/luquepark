@@ -4,7 +4,9 @@ from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import IntegrityError, transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
+from django.core.paginator import Paginator
 
+from django.db.models import Count, Q, Sum
 from .forms import (
     IniciarEstacionamientoForm,
     VerificarChapaForm,
@@ -24,6 +26,16 @@ def verificar_inspector(usuario):
         raise PermissionDenied(
             "Solo los inspectores pueden verificar chapas."
         )
+
+def verificar_administrador(usuario):
+    if not (
+        usuario.is_superuser
+        or usuario.es_administrador
+    ):
+        raise PermissionDenied(
+            "Solo los administradores pueden consultar reportes."
+        )
+    
 @login_required
 def iniciar_estacionamiento(request):
     verificar_conductor(request.user)
@@ -206,5 +218,88 @@ def verificar_chapa(request):
         {
             "form": form,
             "resultado": resultado,
+        },
+    )
+
+@login_required
+def historial_estacionamientos(request):
+    verificar_conductor(request.user)
+
+    estacionamientos = (
+        Estacionamiento.objects.filter(
+            conductor=request.user,
+            estado=Estacionamiento.Estado.FINALIZADO,
+        )
+        .select_related(
+            "vehiculo",
+            "zona",
+        )
+        .order_by("-fecha_fin")
+    )
+
+    paginador = Paginator(
+        estacionamientos,
+        10,
+    )
+
+    pagina = paginador.get_page(
+        request.GET.get("page")
+    )
+
+    return render(
+        request,
+        "estacionamientos/historial.html",
+        {
+            "pagina": pagina,
+        },
+    )
+@login_required
+def reporte_general(request):
+    verificar_administrador(request.user)
+
+    resumen = Estacionamiento.objects.aggregate(
+        total=Count("id"),
+
+        activos=Count(
+            "id",
+            filter=Q(
+                estado=Estacionamiento.Estado.ACTIVO
+            ),
+        ),
+
+        finalizados=Count(
+            "id",
+            filter=Q(
+                estado=Estacionamiento.Estado.FINALIZADO
+            ),
+        ),
+
+        monto_recaudado=Sum(
+            "monto_final",
+            filter=Q(
+                estado=Estacionamiento.Estado.FINALIZADO
+            ),
+            default=0,
+        ),
+    )
+
+    ultimos_estacionamientos = (
+        Estacionamiento.objects.filter(
+            estado=Estacionamiento.Estado.FINALIZADO,
+        )
+        .select_related(
+            "conductor",
+            "vehiculo",
+            "zona",
+        )
+        .order_by("-fecha_fin")[:10]
+    )
+
+    return render(
+        request,
+        "estacionamientos/reporte_general.html",
+        {
+            "resumen": resumen,
+            "ultimos_estacionamientos": ultimos_estacionamientos,
         },
     )

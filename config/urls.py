@@ -27,4 +27,10 @@ urlpatterns = [
         "estacionamientos/",
         include("estacionamientos.urls"),
     ),
+
+    path(
+    "infracciones/",
+    include("infracciones.urls"),
+),
+
 ]

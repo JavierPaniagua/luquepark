@@ -19,6 +19,12 @@ urlpatterns = [
     ),
 
     path(
+        "historial/",
+        views.historial_estacionamientos,
+        name="historial",
+    ),
+
+    path(
         "<int:estacionamiento_id>/finalizar/",
         views.finalizar_estacionamiento,
         name="finalizar",
@@ -29,4 +35,10 @@ urlpatterns = [
         views.verificar_chapa,
         name="verificar_chapa",
     ),
+
+    path(
+    "admin/reporte/",
+    views.reporte_general,
+    name="reporte_general",
+),
 ]

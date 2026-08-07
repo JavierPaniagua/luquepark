@@ -79,6 +79,43 @@
                 {{ message }}
             </div>
             {% endfor %}
+            <nav class="mt-4">
+    <div class="row g-2">
+        <div class="col-6">
+            <a
+                href="{% url 'estacionamientos:historial' %}"
+                class="btn btn-outline-primary btn-action w-100"
+            >
+                Historial
+            </a>
+        </div>
+
+        <div class="col-6">
+            <a
+                href="{% url 'zonas:mapa' %}"
+                class="btn btn-outline-success btn-action w-100"
+            >
+                Mapa de zonas
+            </a>
+        </div>
+
+        <div class="col-12">
+            <form
+                method="post"
+                action="{% url 'usuarios:logout' %}"
+            >
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="btn btn-outline-danger btn-action w-100"
+                >
+                    Cerrar sesión
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
             {% endif %}
 
             {% for estacionamiento in estacionamientos %}

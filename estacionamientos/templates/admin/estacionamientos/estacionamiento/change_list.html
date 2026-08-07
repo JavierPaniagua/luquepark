@@ -1,0 +1,14 @@
+{% extends "admin/change_list.html" %}
+
+{% block object-tools-items %}
+    <li>
+        <a
+            href="{% url 'estacionamientos:reporte_general' %}"
+            class="viewlink"
+        >
+            Ver reporte general
+        </a>
+    </li>
+
+    {{ block.super }}
+{% endblock %}

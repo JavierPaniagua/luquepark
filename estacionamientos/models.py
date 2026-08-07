@@ -122,6 +122,23 @@ class Estacionamiento(models.Model):
 
         self.full_clean()
         super().save(*args, **kwargs)
+    @property
+    def duracion_formateada(self):
+        segundos_totales = self.tiempo_utilizado or 0
+
+        horas, resto = divmod(
+            segundos_totales,
+            3600,
+        )
+
+        minutos, segundos = divmod(
+            resto,
+            60,
+        )
+
+        return f"{horas:02d}:{minutos:02d}:{segundos:02d}"
+
+
 
     def calcular_monto(self, momento=None):
         """

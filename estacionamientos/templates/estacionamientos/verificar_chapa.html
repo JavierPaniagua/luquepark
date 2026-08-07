@@ -1,19 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Verificar chapa | LuquePark</title>
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
         body {
@@ -67,6 +62,14 @@
 <body>
     <main class="container px-3">
         <div class="page-container">
+
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
             <div class="card main-card shadow mb-4">
                 <div class="main-header p-4 text-center">
                     <h1 class="h3 mb-1">LuquePark</h1>
@@ -82,26 +85,20 @@
                         {% csrf_token %}
 
                         <div class="mb-3 chapa-input">
-                            <label
-                                for="{{ form.chapa.id_for_label }}"
-                                class="form-label fw-semibold"
-                            >
+                            <label for="{{ form.chapa.id_for_label }}" class="form-label fw-semibold">
                                 {{ form.chapa.label }}
                             </label>
 
                             {{ form.chapa }}
 
                             {% for error in form.chapa.errors %}
-                                <div class="text-danger small mt-2">
-                                    {{ error }}
-                                </div>
+                            <div class="text-danger small mt-2">
+                                {{ error }}
+                            </div>
                             {% endfor %}
                         </div>
 
-                        <button
-                            type="submit"
-                            class="btn btn-dark btn-verificar w-100"
-                        >
+                        <button type="submit" class="btn btn-dark btn-verificar w-100">
                             Verificar chapa
                         </button>
                     </form>
@@ -109,101 +106,99 @@
             </div>
 
             {% if resultado %}
-                {% if resultado.estado == "ACTIVO" %}
-                    <section
-                        class="card result-card estado-activo shadow-sm"
-                    >
-                        <div class="card-body p-4">
-                            <div class="text-center mb-4">
-                                <span class="badge bg-success fs-6">
-                                    ESTACIONAMIENTO ACTIVO
-                                </span>
+            {% if resultado.estado == "ACTIVO" %}
+            <section class="card result-card estado-activo shadow-sm">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <span class="badge bg-success fs-6">
+                            ESTACIONAMIENTO ACTIVO
+                        </span>
 
-                                <h2 class="display-6 fw-bold mt-3 mb-0">
-                                    {{ resultado.chapa }}
-                                </h2>
-                            </div>
+                        <h2 class="display-6 fw-bold mt-3 mb-0">
+                            {{ resultado.chapa }}
+                        </h2>
+                    </div>
 
-                            <dl class="row mb-0">
-                                <dt class="col-5">Vehículo</dt>
-                                <dd class="col-7">
-                                    {{ resultado.vehiculo }}
-                                </dd>
+                    <dl class="row mb-0">
+                        <dt class="col-5">Vehículo</dt>
+                        <dd class="col-7">
+                            {{ resultado.vehiculo }}
+                        </dd>
 
-                                <dt class="col-5">Zona</dt>
-                                <dd class="col-7">
-                                    {{ resultado.estacionamiento.zona.nombre }}
-                                </dd>
+                        <dt class="col-5">Zona</dt>
+                        <dd class="col-7">
+                            {{ resultado.estacionamiento.zona.nombre }}
+                        </dd>
 
-                                <dt class="col-5">Código</dt>
-                                <dd class="col-7">
-                                    {{ resultado.estacionamiento.zona.codigo }}
-                                </dd>
+                        <dt class="col-5">Código</dt>
+                        <dd class="col-7">
+                            {{ resultado.estacionamiento.zona.codigo }}
+                        </dd>
 
-                                <dt class="col-5">Hora de inicio</dt>
-                                <dd class="col-7">
-                                    {{ resultado.estacionamiento.fecha_inicio|date:"d/m/Y H:i:s" }}
-                                </dd>
+                        <dt class="col-5">Hora de inicio</dt>
+                        <dd class="col-7">
+                            {{ resultado.estacionamiento.fecha_inicio|date:"d/m/Y H:i:s" }}
+                        </dd>
 
-                                <dt class="col-5">Tarifa</dt>
-                                <dd class="col-7">
-                                    Gs.
-                                    {{ resultado.estacionamiento.tarifa_aplicada }}
-                                    por hora
-                                </dd>
+                        <dt class="col-5">Tarifa</dt>
+                        <dd class="col-7">
+                            Gs.
+                            {{ resultado.estacionamiento.tarifa_aplicada }}
+                            por hora
+                        </dd>
 
-                                <dt class="col-5">Monto aproximado</dt>
-                                <dd class="col-7 fw-bold text-primary">
-                                    Gs. {{ resultado.monto_aproximado }}
-                                </dd>
-                            </dl>
-                        </div>
-                    </section>
+                        <dt class="col-5">Monto aproximado</dt>
+                        <dd class="col-7 fw-bold text-primary">
+                            Gs. {{ resultado.monto_aproximado }}
+                        </dd>
+                    </dl>
+                </div>
+            </section>
 
-                {% elif resultado.estado == "SIN_ESTACIONAMIENTO" %}
-                    <section
-                        class="card result-card estado-inactivo shadow-sm"
-                    >
-                        <div class="card-body p-4 text-center">
-                            <span class="badge bg-danger fs-6">
-                                SIN ESTACIONAMIENTO
-                            </span>
+            {% elif resultado.estado == "SIN_ESTACIONAMIENTO" %}
+            <section class="card result-card estado-inactivo shadow-sm">
+                <div class="card-body p-4 text-center">
+                    <span class="badge bg-danger fs-6">
+                        SIN ESTACIONAMIENTO
+                    </span>
 
-                            <h2 class="display-6 fw-bold mt-3">
-                                {{ resultado.chapa }}
-                            </h2>
+                    <h2 class="display-6 fw-bold mt-3">
+                        {{ resultado.chapa }}
+                    </h2>
 
-                            <p class="text-danger fw-semibold mb-2">
-                                {{ resultado.mensaje }}
-                            </p>
+                    <p class="text-danger fw-semibold mb-2">
+                        {{ resultado.mensaje }}
+                    </p>
 
-                            <p class="text-muted mb-0">
-                                Vehículo: {{ resultado.vehiculo }}
-                            </p>
-                        </div>
-                    </section>
+                    <p class="text-muted">
+                        Vehículo: {{ resultado.vehiculo }}
+                    </p>
 
-                {% else %}
-                    <section
-                        class="card result-card estado-no-registrado shadow-sm"
-                    >
-                        <div class="card-body p-4 text-center">
-                            <span class="badge bg-secondary fs-6">
-                                CHAPA NO REGISTRADA
-                            </span>
+                    <a href="{% url 'infracciones:registrar' resultado.chapa %}" class="btn btn-danger w-100 mt-3">
+                        Registrar infracción
+                    </a>
+                </div>
+            </section>
+            {% else %}
+            <section class="card result-card estado-no-registrado shadow-sm">
+                <div class="card-body p-4 text-center">
+                    <span class="badge bg-secondary fs-6">
+                        CHAPA NO REGISTRADA
+                    </span>
 
-                            <h2 class="display-6 fw-bold mt-3">
-                                {{ resultado.chapa }}
-                            </h2>
+                    <h2 class="display-6 fw-bold mt-3">
+                        {{ resultado.chapa }}
+                    </h2>
 
-                            <p class="text-muted mb-0">
-                                {{ resultado.mensaje }}
-                            </p>
-                        </div>
-                    </section>
-                {% endif %}
+                    <p class="text-muted mb-0">
+                        {{ resultado.mensaje }}
+                    </p>
+                </div>
+            </section>
+            {% endif %}
             {% endif %}
         </div>
     </main>
 </body>
+
 </html>
