@@ -88,7 +88,9 @@
                         </label>
 
                         {{ form.zona }}
-
+                        <a href="{% url 'zonas:mapa' %}" class="btn btn-outline-success w-100 mt-2">
+                            Elegir zona en el mapa
+                        </a>
                         {% for error in form.zona.errors %}
                         <div class="text-danger small mt-1">
                             {{ error }}
@@ -114,35 +116,23 @@
 
                 <hr class="my-4">
 
-<div class="d-grid gap-2">
-    <a
-        href="{% url 'estacionamientos:activos' %}"
-        class="btn btn-outline-primary"
-    >
-        Ver estacionamientos activos
-    </a>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'estacionamientos:activos' %}" class="btn btn-outline-primary">
+                        Ver estacionamientos activos
+                    </a>
 
-    <a
-        href="{% url 'vehiculos:mis_vehiculos' %}"
-        class="btn btn-outline-secondary"
-    >
-        Mis vehículos
-    </a>
+                    <a href="{% url 'vehiculos:mis_vehiculos' %}" class="btn btn-outline-secondary">
+                        Mis vehículos
+                    </a>
 
-    <form
-        method="post"
-        action="{% url 'usuarios:logout' %}"
-    >
-        {% csrf_token %}
+                    <form method="post" action="{% url 'usuarios:logout' %}">
+                        {% csrf_token %}
 
-        <button
-            type="submit"
-            class="btn btn-outline-danger w-100"
-        >
-            Cerrar sesión
-        </button>
-    </form>
-</div>
+                        <button type="submit" class="btn btn-outline-danger w-100">
+                            Cerrar sesión
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </main>

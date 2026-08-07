@@ -1,18 +1,19 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.paginator import Paginator
 from django.db import IntegrityError, transaction
+from django.db.models import Count, Q, Sum
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
-from django.core.paginator import Paginator
 
-from django.db.models import Count, Q, Sum
+from vehiculos.models import Vehiculo
+
 from .forms import (
     IniciarEstacionamientoForm,
     VerificarChapaForm,
 )
 from .models import Estacionamiento
-from vehiculos.models import Vehiculo
 
 
 def verificar_conductor(usuario):
@@ -21,11 +22,13 @@ def verificar_conductor(usuario):
             "Solo los conductores pueden realizar esta operación."
         )
 
+
 def verificar_inspector(usuario):
     if not usuario.es_inspector:
         raise PermissionDenied(
             "Solo los inspectores pueden verificar chapas."
         )
+
 
 def verificar_administrador(usuario):
     if not (
@@ -35,7 +38,8 @@ def verificar_administrador(usuario):
         raise PermissionDenied(
             "Solo los administradores pueden consultar reportes."
         )
-    
+
+
 @login_required
 def iniciar_estacionamiento(request):
     verificar_conductor(request.user)
@@ -68,19 +72,30 @@ def iniciar_estacionamiento(request):
                     "vehiculo",
                     (
                         "No se pudo iniciar el estacionamiento. "
-                        "El vehículo podría tener otro estacionamiento activo."
+                        "El vehículo podría tener otro "
+                        "estacionamiento activo."
                     ),
                 )
 
     else:
+        zona_id = request.GET.get("zona")
+
+        datos_iniciales = {}
+
+        if zona_id:
+            datos_iniciales["zona"] = zona_id
+
         form = IniciarEstacionamientoForm(
             conductor=request.user,
+            initial=datos_iniciales,
         )
 
     return render(
         request,
         "estacionamientos/iniciar.html",
-        {"form": form},
+        {
+            "form": form,
+        },
     )
 
 
@@ -111,7 +126,10 @@ def estacionamientos_activos(request):
 
 @login_required
 @require_POST
-def finalizar_estacionamiento(request, estacionamiento_id):
+def finalizar_estacionamiento(
+    request,
+    estacionamiento_id,
+):
     verificar_conductor(request.user)
 
     try:
@@ -127,8 +145,10 @@ def finalizar_estacionamiento(request, estacionamiento_id):
         messages.success(
             request,
             (
-                f"Estacionamiento de {estacionamiento.vehiculo.chapa} "
-                f"finalizado. Monto: Gs. {estacionamiento.monto_final}."
+                f"Estacionamiento de "
+                f"{estacionamiento.vehiculo.chapa} "
+                f"finalizado. Monto: Gs. "
+                f"{estacionamiento.monto_final}."
             ),
         )
 
@@ -142,6 +162,7 @@ def finalizar_estacionamiento(request, estacionamiento_id):
         "estacionamientos:activos"
     )
 
+
 @login_required
 def verificar_chapa(request):
     verificar_inspector(request.user)
@@ -149,7 +170,9 @@ def verificar_chapa(request):
     resultado = None
 
     if request.method == "POST":
-        form = VerificarChapaForm(request.POST)
+        form = VerificarChapaForm(
+            request.POST
+        )
 
         if form.is_valid():
             chapa = form.cleaned_data["chapa"]
@@ -177,7 +200,9 @@ def verificar_chapa(request):
                 estacionamiento = (
                     Estacionamiento.objects.filter(
                         vehiculo=vehiculo,
-                        estado=Estacionamiento.Estado.ACTIVO,
+                        estado=(
+                            Estacionamiento.Estado.ACTIVO
+                        ),
                     )
                     .select_related(
                         "vehiculo",
@@ -204,8 +229,9 @@ def verificar_chapa(request):
                         "chapa": chapa,
                         "vehiculo": vehiculo,
                         "mensaje": (
-                            "El vehículo está registrado, pero no tiene "
-                            "un estacionamiento activo."
+                            "El vehículo está registrado, "
+                            "pero no tiene un estacionamiento "
+                            "activo."
                         ),
                     }
 
@@ -220,6 +246,7 @@ def verificar_chapa(request):
             "resultado": resultado,
         },
     )
+
 
 @login_required
 def historial_estacionamientos(request):
@@ -253,6 +280,8 @@ def historial_estacionamientos(request):
             "pagina": pagina,
         },
     )
+
+
 @login_required
 def reporte_general(request):
     verificar_administrador(request.user)
@@ -300,6 +329,8 @@ def reporte_general(request):
         "estacionamientos/reporte_general.html",
         {
             "resumen": resumen,
-            "ultimos_estacionamientos": ultimos_estacionamientos,
+            "ultimos_estacionamientos": (
+                ultimos_estacionamientos
+            ),
         },
     )

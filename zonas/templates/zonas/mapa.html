@@ -145,35 +145,42 @@
             );
 
             const contenido = `
-                <div>
-                    <strong>
-                        ${escaparHTML(zona.nombre)}
-                    </strong>
+    <div style="min-width: 210px;">
+        <strong>
+            ${escaparHTML(zona.nombre)}
+        </strong>
 
-                    <div>
-                        Código: ${escaparHTML(zona.codigo)}
-                    </div>
+        <div>
+            Código: ${escaparHTML(zona.codigo)}
+        </div>
 
-                    <div>
-                        Tarifa: Gs. ${tarifa} por hora
-                    </div>
+        <div>
+            Tarifa: Gs. ${tarifa} por hora
+        </div>
 
-                    <div>
-                        Horario:
-                        ${escaparHTML(zona.hora_inicio)}
-                        a
-                        ${escaparHTML(zona.hora_fin)}
-                    </div>
+        <div>
+            Horario:
+            ${escaparHTML(zona.hora_inicio)}
+            a
+            ${escaparHTML(zona.hora_fin)}
+        </div>
 
-                    ${
-                        zona.descripcion
-                            ? `<div class="mt-1">
-                                ${escaparHTML(zona.descripcion)}
-                               </div>`
-                            : ""
-                    }
-                </div>
-            `;
+        ${
+            zona.descripcion
+                ? `<div class="mt-1">
+                    ${escaparHTML(zona.descripcion)}
+                   </div>`
+                : ""
+        }
+
+        <a
+            href="/estacionamientos/iniciar/?zona=${encodeURIComponent(zona.id)}"
+            class="btn btn-primary btn-sm w-100 mt-3"
+        >
+            Estacionar en esta zona
+        </a>
+    </div>
+`;
 
             const marcador = L.marker(
                 [
