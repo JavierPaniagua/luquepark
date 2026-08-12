@@ -128,9 +128,7 @@
         return elemento.innerHTML;
     }
 
-    const marcadores = [];
-
-    zonas.forEach((zona) => {
+    function crearContenidoZona(zona) {
         const tarifa = Number(
             zona.tarifa_hora
         ).toLocaleString(
@@ -141,8 +139,12 @@
             }
         );
 
-        const contenido = `
-            <div style="min-width: 210px;">
+        const enlaceEstacionamiento =
+            "/estacionamientos/iniciar/?zona=" +
+            encodeURIComponent(zona.id);
+
+        return `
+            <div style="min-width: 220px;">
                 <strong>
                     ${escaparHTML(zona.nombre)}
                 </strong>
@@ -153,7 +155,8 @@
                 </div>
 
                 <div>
-                    Tarifa: Gs. ${tarifa} por hora
+                    Tarifa:
+                    Gs. ${tarifa} por hora
                 </div>
 
                 <div>
@@ -176,9 +179,7 @@
                 }
 
                 <a
-                    href="/estacionamientos/iniciar/?zona=${
-                        encodeURIComponent(zona.id)
-                    }"
+                    href="${enlaceEstacionamiento}"
                     class="btn btn-primary
                            btn-sm w-100 mt-3"
                 >
@@ -186,27 +187,115 @@
                 </a>
             </div>
         `;
+    }
 
-        const marcador = L.marker(
-            [
-                zona.latitud,
-                zona.longitud
-            ]
-        )
-            .addTo(mapa)
-            .bindPopup(contenido);
+    const elementosMapa = [];
 
-        marcadores.push(marcador);
+    zonas.forEach((zona) => {
+        const contenido = crearContenidoZona(
+            zona
+        );
+
+        /*
+         * Si la zona tiene una geometría GeoJSON,
+         * dibujamos sus calles o su sector.
+         */
+        if (zona.geometria) {
+            const capaZona = L.geoJSON(
+                zona.geometria,
+                {
+                    style: function () {
+                        return {
+                            color:
+                                zona.color_mapa ||
+                                "#20c997",
+
+                            weight: 7,
+                            opacity: 0.85,
+
+                            fillColor:
+                                zona.color_mapa ||
+                                "#20c997",
+
+                            fillOpacity: 0.25,
+                        };
+                    },
+
+                    onEachFeature: function (
+                        feature,
+                        layer
+                    ) {
+                        layer.bindPopup(
+                            contenido
+                        );
+
+                        layer.on(
+                            "mouseover",
+                            function () {
+                                layer.setStyle({
+                                    weight: 10,
+                                    opacity: 1,
+                                    fillOpacity: 0.40,
+                                });
+                            }
+                        );
+
+                        layer.on(
+                            "mouseout",
+                            function () {
+                                capaZona.resetStyle(
+                                    layer
+                                );
+                            }
+                        );
+                    },
+                }
+            ).addTo(mapa);
+
+            elementosMapa.push(
+                capaZona
+            );
+        }
+
+        /*
+         * Conservamos el marcador si la zona
+         * también tiene latitud y longitud.
+         */
+        if (
+            zona.latitud !== null &&
+            zona.longitud !== null
+        ) {
+            const marcador = L.marker(
+                [
+                    zona.latitud,
+                    zona.longitud
+                ]
+            )
+                .addTo(mapa)
+                .bindPopup(contenido);
+
+            elementosMapa.push(
+                marcador
+            );
+        }
     });
 
-    if (marcadores.length > 0) {
+    /*
+     * Ajustamos el mapa para mostrar todas
+     * las zonas registradas.
+     */
+    if (elementosMapa.length > 0) {
         const grupo = L.featureGroup(
-            marcadores
+            elementosMapa
         );
 
-        mapa.fitBounds(
-            grupo.getBounds().pad(0.20)
-        );
+        const limites = grupo.getBounds();
+
+        if (limites.isValid()) {
+            mapa.fitBounds(
+                limites.pad(0.15)
+            );
+        }
     }
 </script>
 {% endblock %}

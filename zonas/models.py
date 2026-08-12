@@ -56,6 +56,24 @@ class Zona(models.Model):
         verbose_name="Zona activa",
     )
 
+    color_mapa = models.CharField(
+        max_length=7,
+        default="#20c997",
+        help_text=(
+            "Color utilizado para representar la zona "
+            "en el mapa. Ejemplo: #20c997"
+        ),
+    )
+
+    geometria = models.JSONField(
+        null=True,
+        blank=True,
+        help_text=(
+            "Calles o sectores que pertenecen a la zona, "
+            "guardados en formato GeoJSON."
+        ),
+    )
+
     fecha_creacion = models.DateTimeField(
         auto_now_add=True,
         verbose_name="Fecha de creación",

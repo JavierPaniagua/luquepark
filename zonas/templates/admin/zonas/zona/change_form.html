@@ -1,0 +1,488 @@
+{% extends "admin/change_form.html" %}
+
+{% block extrahead %}
+    {{ block.super }}
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css"
+    >
+
+    <style>
+        #editor-zona {
+            width: 100%;
+            height: 600px;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .instrucciones-mapa {
+            margin-top: 20px;
+            padding: 15px;
+            border-left: 5px solid #20c997;
+            background-color: #f4f6f9;
+        }
+
+        .instrucciones-mapa strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .instrucciones-mapa ul {
+            margin-bottom: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block after_field_sets %}
+    {{ block.super }}
+
+    <div class="module aligned">
+        <h2>
+            Editor de calles y sectores
+        </h2>
+
+        <div class="instrucciones-mapa">
+            <strong>
+                ¿Cómo dibujar la zona?
+            </strong>
+
+            <p>
+                Utilice las herramientas ubicadas en la
+                esquina superior izquierda del mapa.
+            </p>
+
+            <ul>
+                <li>
+                    La línea permite pintar una o varias
+                    calles.
+                </li>
+
+                <li>
+                    El polígono permite delimitar un sector.
+                </li>
+
+                <li>
+                    El rectángulo permite marcar una zona
+                    rectangular.
+                </li>
+
+                <li>
+                    La herramienta de edición permite mover
+                    los puntos dibujados.
+                </li>
+
+                <li>
+                    La papelera permite borrar dibujos.
+                </li>
+            </ul>
+
+            <p>
+                Después de dibujar, presione
+                <strong>Guardar</strong>
+                al final de la página.
+            </p>
+        </div>
+
+        <div id="editor-zona"></div>
+    </div>
+{% endblock %}
+
+{% block admin_change_form_document_ready %}
+    {{ block.super }}
+
+    <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    ></script>
+
+    <script
+        src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"
+    ></script>
+
+    <script>
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+                const centroLuque = [
+                    -25.2670,
+                    -57.4870
+                ];
+
+                /*
+                 * Obtenemos primero los campos del formulario.
+                 * Deben declararse antes de crear las
+                 * herramientas de dibujo.
+                 */
+                const campoGeometria =
+                    document.getElementById(
+                        "id_geometria"
+                    );
+
+                const campoColor =
+                    document.getElementById(
+                        "id_color_mapa"
+                    );
+
+                const campoLatitud =
+                    document.getElementById(
+                        "id_latitud"
+                    );
+
+                const campoLongitud =
+                    document.getElementById(
+                        "id_longitud"
+                    );
+
+                function obtenerColor() {
+                    if (
+                        campoColor &&
+                        campoColor.value
+                    ) {
+                        return campoColor.value;
+                    }
+
+                    return "#20c997";
+                }
+
+                /*
+                 * Crear el mapa.
+                 */
+                const mapa = L.map(
+                    "editor-zona"
+                ).setView(
+                    centroLuque,
+                    15
+                );
+
+                L.tileLayer(
+                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                    {
+                        maxZoom: 20,
+                        attribution:
+                            "&copy; colaboradores de OpenStreetMap"
+                    }
+                ).addTo(mapa);
+
+                /*
+                 * Grupo que contendrá todas las líneas
+                 * y polígonos dibujados.
+                 */
+                const capasDibujadas =
+                    new L.FeatureGroup();
+
+                mapa.addLayer(
+                    capasDibujadas
+                );
+
+                /*
+                 * Crear las herramientas de Leaflet Draw.
+                 */
+                const controlDibujo =
+                    new L.Control.Draw({
+                        position: "topleft",
+
+                        draw: {
+                            polyline: {
+                                shapeOptions: {
+                                    color:
+                                        obtenerColor(),
+
+                                    weight: 7,
+                                    opacity: 0.90,
+                                },
+                            },
+
+                            polygon: {
+                                allowIntersection: false,
+
+                                showArea: true,
+
+                                shapeOptions: {
+                                    color:
+                                        obtenerColor(),
+
+                                    weight: 5,
+
+                                    fillColor:
+                                        obtenerColor(),
+
+                                    fillOpacity: 0.25,
+                                },
+                            },
+
+                            rectangle: {
+                                shapeOptions: {
+                                    color:
+                                        obtenerColor(),
+
+                                    weight: 5,
+
+                                    fillColor:
+                                        obtenerColor(),
+
+                                    fillOpacity: 0.25,
+                                },
+                            },
+
+                            marker: false,
+                            circle: false,
+                            circlemarker: false,
+                        },
+
+                        edit: {
+                            featureGroup:
+                                capasDibujadas,
+
+                            remove: true,
+                        },
+                    });
+
+                mapa.addControl(
+                    controlDibujo
+                );
+
+                /*
+                 * Guardar todas las capas como GeoJSON
+                 * dentro del campo oculto geometria.
+                 */
+                function guardarGeometria() {
+                    if (!campoGeometria) {
+                        return;
+                    }
+
+                    const geojson =
+                        capasDibujadas.toGeoJSON();
+
+                    if (
+                        geojson.features.length === 0
+                    ) {
+                        campoGeometria.value = "";
+                        return;
+                    }
+
+                    campoGeometria.value =
+                        JSON.stringify(
+                            geojson
+                        );
+                }
+
+                /*
+                 * Aplicar el color seleccionado a todos
+                 * los dibujos existentes.
+                 */
+                function actualizarColores() {
+                    const color =
+                        obtenerColor();
+
+                    capasDibujadas.eachLayer(
+                        function (capa) {
+                            if (capa.setStyle) {
+                                capa.setStyle({
+                                    color: color,
+                                    fillColor: color,
+                                });
+                            }
+                        }
+                    );
+
+                    guardarGeometria();
+                }
+
+                /*
+                 * Centrar el mapa usando la latitud
+                 * y longitud de la zona.
+                 */
+                function centrarConCoordenadas() {
+                    if (
+                        !campoLatitud ||
+                        !campoLongitud ||
+                        !campoLatitud.value ||
+                        !campoLongitud.value
+                    ) {
+                        return;
+                    }
+
+                    const latitud = Number(
+                        campoLatitud.value
+                    );
+
+                    const longitud = Number(
+                        campoLongitud.value
+                    );
+
+                    if (
+                        Number.isFinite(latitud) &&
+                        Number.isFinite(longitud)
+                    ) {
+                        mapa.setView(
+                            [
+                                latitud,
+                                longitud
+                            ],
+                            17
+                        );
+                    }
+                }
+
+                /*
+                 * Cargar los dibujos guardados
+                 * anteriormente.
+                 */
+                function cargarGeometriaExistente() {
+                    if (
+                        !campoGeometria ||
+                        !campoGeometria.value
+                    ) {
+                        centrarConCoordenadas();
+                        return;
+                    }
+
+                    try {
+                        const geometria =
+                            JSON.parse(
+                                campoGeometria.value
+                            );
+
+                        L.geoJSON(
+                            geometria,
+                            {
+                                style: {
+                                    color:
+                                        obtenerColor(),
+
+                                    weight: 7,
+
+                                    fillColor:
+                                        obtenerColor(),
+
+                                    fillOpacity: 0.25,
+                                },
+
+                                onEachFeature:
+                                    function (
+                                        feature,
+                                        layer
+                                    ) {
+                                        capasDibujadas
+                                            .addLayer(
+                                                layer
+                                            );
+                                    },
+                            }
+                        );
+
+                        const limites =
+                            capasDibujadas.getBounds();
+
+                        if (limites.isValid()) {
+                            mapa.fitBounds(
+                                limites.pad(0.15)
+                            );
+                        }
+                    } catch (error) {
+                        console.error(
+                            "No se pudo cargar la geometría:",
+                            error
+                        );
+
+                        centrarConCoordenadas();
+                    }
+                }
+
+                /*
+                 * Cuando se crea una línea, un polígono
+                 * o un rectángulo.
+                 */
+                mapa.on(
+                    L.Draw.Event.CREATED,
+                    function (evento) {
+                        const capa =
+                            evento.layer;
+
+                        if (capa.setStyle) {
+                            capa.setStyle({
+                                color:
+                                    obtenerColor(),
+
+                                fillColor:
+                                    obtenerColor(),
+                            });
+                        }
+
+                        capasDibujadas.addLayer(
+                            capa
+                        );
+
+                        guardarGeometria();
+                    }
+                );
+
+                /*
+                 * Cuando se modifican los puntos.
+                 */
+                mapa.on(
+                    L.Draw.Event.EDITED,
+                    function () {
+                        guardarGeometria();
+                    }
+                );
+
+                /*
+                 * Cuando se eliminan dibujos.
+                 */
+                mapa.on(
+                    L.Draw.Event.DELETED,
+                    function () {
+                        guardarGeometria();
+                    }
+                );
+
+                /*
+                 * Actualizar los dibujos al cambiar
+                 * el selector de color.
+                 */
+                if (campoColor) {
+                    campoColor.addEventListener(
+                        "input",
+                        actualizarColores
+                    );
+                }
+
+                /*
+                 * Guardar el GeoJSON antes de enviar
+                 * el formulario de Django.
+                 */
+                const formulario =
+                    document.querySelector(
+                        "#zona_form"
+                    );
+
+                if (formulario) {
+                    formulario.addEventListener(
+                        "submit",
+                        guardarGeometria
+                    );
+                }
+
+                cargarGeometriaExistente();
+
+                /*
+                 * Corrige el tamaño del mapa cuando
+                 * se carga dentro del administrador.
+                 */
+                setTimeout(
+                    function () {
+                        mapa.invalidateSize();
+                    },
+                    300
+                );
+            }
+        );
+    </script>
+{% endblock %}
