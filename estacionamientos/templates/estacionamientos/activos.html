@@ -1,127 +1,91 @@
+{% extends "base.html" %}
 {% load l10n %}
 
-<!DOCTYPE html>
-<html lang="es">
+{% block title %}
+    Estacionamientos activos | LuquePark
+{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
+{% block extra_css %}
+    .page-container {
+        max-width: 650px;
+        margin: 30px auto;
+    }
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    .parking-card {
+        border: none;
+        border-radius: 18px;
+        overflow: hidden;
+    }
 
-    <title>Estacionamientos activos | LuquePark</title>
+    .parking-status {
+        background-color: #198754;
+        color: white;
+    }
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    .time-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+    }
 
-    <style>
-        body {
-            background-color: #f4f6f9;
-        }
+    .amount-value {
+        color: #0d6efd;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+{% endblock %}
 
-        .page-container {
-            max-width: 620px;
-            margin: 30px auto;
-        }
+{% block content %}
+<main class="container px-3">
+    <div class="page-container">
+        <header
+            class="d-flex justify-content-between
+                   align-items-center mb-4"
+        >
+            <div>
+                <h1 class="h3 mb-1">
+                    LuquePark
+                </h1>
 
-        .parking-card {
-            border: none;
-            border-radius: 18px;
-            overflow: hidden;
-        }
-
-        .parking-status {
-            background-color: #198754;
-            color: white;
-        }
-
-        .time-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-        }
-
-        .amount-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #0d6efd;
-        }
-
-        .btn-action {
-            min-height: 50px;
-            font-weight: 600;
-        }
-    </style>
-</head>
-
-<body>
-    <main class="container px-3">
-        <div class="page-container">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h1 class="h3 mb-1">LuquePark</h1>
-                    <p class="text-muted mb-0">
-                        Estacionamientos activos
-                    </p>
-                </div>
-
-                <div class="d-flex gap-2">
-                    <a href="{% url 'vehiculos:mis_vehiculos' %}" class="btn btn-outline-secondary">
-                        Vehículos
-                    </a>
-
-                    <a href="{% url 'estacionamientos:iniciar' %}" class="btn btn-primary">
-                        Nuevo
-                    </a>
-                </div>
+                <p class="text-muted mb-0">
+                    Estacionamientos activos
+                </p>
             </div>
 
-            {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}" role="alert">
-                {{ message }}
-            </div>
-            {% endfor %}
-            <nav class="mt-4">
-    <div class="row g-2">
-        <div class="col-6">
-            <a
-                href="{% url 'estacionamientos:historial' %}"
-                class="btn btn-outline-primary btn-action w-100"
-            >
-                Historial
-            </a>
-        </div>
-
-        <div class="col-6">
-            <a
-                href="{% url 'zonas:mapa' %}"
-                class="btn btn-outline-success btn-action w-100"
-            >
-                Mapa de zonas
-            </a>
-        </div>
-
-        <div class="col-12">
-            <form
-                method="post"
-                action="{% url 'usuarios:logout' %}"
-            >
-                {% csrf_token %}
-
-                <button
-                    type="submit"
-                    class="btn btn-outline-danger btn-action w-100"
+            <div class="d-flex gap-2">
+                <a
+                    href="{% url 'vehiculos:mis_vehiculos' %}"
+                    class="btn btn-outline-secondary"
                 >
-                    Cerrar sesión
-                </button>
-            </form>
-        </div>
-    </div>
-</nav>
-            {% endif %}
+                    Vehículos
+                </a>
 
-            {% for estacionamiento in estacionamientos %}
-            <article class="card parking-card shadow-sm mb-4 estacionamiento"
+                <a
+                    href="{% url 'estacionamientos:iniciar' %}"
+                    class="btn btn-primary"
+                >
+                    Nuevo
+                </a>
+            </div>
+        </header>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div
+                    class="alert alert-{{ message.tags }}"
+                    role="alert"
+                >
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% for estacionamiento in estacionamientos %}
+            <article
+                class="card parking-card shadow-sm
+                       mb-4 estacionamiento"
                 data-inicio="{{ estacionamiento.fecha_inicio|date:'c' }}"
-                data-tarifa="{{ estacionamiento.tarifa_aplicada|unlocalize }}">
+                data-tarifa="{{ estacionamiento.tarifa_aplicada|unlocalize }}"
+            >
                 <div class="parking-status p-3">
                     <div class="d-flex justify-content-between">
                         <strong>
@@ -134,29 +98,45 @@
 
                 <div class="card-body p-4">
                     <dl class="row mb-3">
-                        <dt class="col-4">Vehículo</dt>
+                        <dt class="col-4">
+                            Vehículo
+                        </dt>
+
                         <dd class="col-8">
                             {{ estacionamiento.vehiculo }}
                         </dd>
 
-                        <dt class="col-4">Zona</dt>
+                        <dt class="col-4">
+                            Zona
+                        </dt>
+
                         <dd class="col-8">
                             {{ estacionamiento.zona.nombre }}
                         </dd>
 
-                        <dt class="col-4">Inicio</dt>
+                        <dt class="col-4">
+                            Inicio
+                        </dt>
+
                         <dd class="col-8">
                             {{ estacionamiento.fecha_inicio|date:"d/m/Y H:i:s" }}
                         </dd>
 
-                        <dt class="col-4">Tarifa</dt>
+                        <dt class="col-4">
+                            Tarifa
+                        </dt>
+
                         <dd class="col-8">
-                            Gs. {{ estacionamiento.tarifa_aplicada }}
+                            Gs.
+                            {{ estacionamiento.tarifa_aplicada }}
                             por hora
                         </dd>
                     </dl>
 
-                    <div class="text-center bg-light rounded p-3 mb-3">
+                    <div
+                        class="text-center bg-light
+                               rounded p-3 mb-3"
+                    >
                         <div class="text-muted">
                             Tiempo transcurrido
                         </div>
@@ -176,19 +156,27 @@
                         </div>
                     </div>
 
-                    <form method="post" action="{% url 'estacionamientos:finalizar' estacionamiento.id %}">
+                    <form
+                        method="post"
+                        action="{% url 'estacionamientos:finalizar' estacionamiento.id %}"
+                    >
                         {% csrf_token %}
 
-                        <button type="submit" class="btn btn-danger btn-action w-100" onclick="return confirm(
-                                    '¿Desea finalizar este estacionamiento?'
-                                );">
+                        <button
+                            type="submit"
+                            class="btn btn-danger
+                                   btn-action w-100"
+                            onclick="return confirm(
+                                '¿Desea finalizar este estacionamiento?'
+                            );"
+                        >
                             Finalizar estacionamiento
                         </button>
                     </form>
                 </div>
             </article>
 
-            {% empty %}
+        {% empty %}
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-5 text-center">
                     <h2 class="h5">
@@ -196,83 +184,135 @@
                     </h2>
 
                     <p class="text-muted">
-                        Selecciona un vehículo y una zona para comenzar.
+                        Selecciona un vehículo y una zona
+                        para comenzar.
                     </p>
 
-                    <a href="{% url 'estacionamientos:iniciar' %}" class="btn btn-primary btn-action w-100">
+                    <a
+                        href="{% url 'estacionamientos:iniciar' %}"
+                        class="btn btn-primary
+                               btn-action w-100"
+                    >
                         Iniciar estacionamiento
                     </a>
                 </div>
             </div>
-            {% endfor %}
-        </div>
-    </main>
+        {% endfor %}
 
-    <script>
-        function actualizarEstacionamientos() {
-            const tarjetas = document.querySelectorAll(
-                ".estacionamiento"
+        <nav class="mt-4">
+            <div class="row g-2">
+                <div class="col-6">
+                    <a
+                        href="{% url 'estacionamientos:historial' %}"
+                        class="btn btn-outline-primary
+                               btn-action w-100"
+                    >
+                        Historial
+                    </a>
+                </div>
+
+                <div class="col-6">
+                    <a
+                        href="{% url 'zonas:mapa' %}"
+                        class="btn btn-outline-success
+                               btn-action w-100"
+                    >
+                        Mapa de zonas
+                    </a>
+                </div>
+
+                <div class="col-12">
+                    <form
+                        method="post"
+                        action="{% url 'usuarios:logout' %}"
+                    >
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="btn btn-outline-danger
+                                   btn-action w-100"
+                        >
+                            Cerrar sesión
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function actualizarEstacionamientos() {
+        const tarjetas = document.querySelectorAll(
+            ".estacionamiento"
+        );
+
+        tarjetas.forEach((tarjeta) => {
+            const inicio = new Date(
+                tarjeta.dataset.inicio
             );
 
-            tarjetas.forEach((tarjeta) => {
-                const inicio = new Date(
-                    tarjeta.dataset.inicio
+            const tarifa = Number(
+                tarjeta.dataset.tarifa
+            );
+
+            const ahora = new Date();
+
+            const segundosTotales = Math.max(
+                0,
+                Math.floor((ahora - inicio) / 1000)
+            );
+
+            const horas = Math.floor(
+                segundosTotales / 3600
+            );
+
+            const minutos = Math.floor(
+                (segundosTotales % 3600) / 60
+            );
+
+            const segundos = segundosTotales % 60;
+
+            const tiempoFormateado = [
+                horas,
+                minutos,
+                segundos
+            ]
+                .map(
+                    (valor) =>
+                        String(valor).padStart(2, "0")
+                )
+                .join(":");
+
+            const monto =
+                tarifa * segundosTotales / 3600;
+
+            tarjeta.querySelector(
+                ".tiempo"
+            ).textContent = tiempoFormateado;
+
+            tarjeta.querySelector(
+                ".monto"
+            ).textContent =
+                "Gs. " +
+                monto.toLocaleString(
+                    "es-PY",
+                    {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }
                 );
+        });
+    }
 
-                const tarifa = Number(
-                    tarjeta.dataset.tarifa
-                );
+    actualizarEstacionamientos();
 
-                const ahora = new Date();
-
-                const segundosTotales = Math.max(
-                    0,
-                    Math.floor((ahora - inicio) / 1000)
-                );
-
-                const horas = Math.floor(
-                    segundosTotales / 3600
-                );
-
-                const minutos = Math.floor(
-                    (segundosTotales % 3600) / 60
-                );
-
-                const segundos = segundosTotales % 60;
-
-                const tiempoFormateado = [
-                    horas,
-                    minutos,
-                    segundos
-                ]
-                    .map((valor) => String(valor).padStart(2, "0"))
-                    .join(":");
-
-                const monto = (
-                    tarifa * segundosTotales / 3600
-                );
-
-                tarjeta.querySelector(".tiempo").textContent =
-                    tiempoFormateado;
-
-                tarjeta.querySelector(".monto").textContent =
-                    "Gs. " + monto.toLocaleString(
-                        "es-PY",
-                        {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                        }
-                    );
-            });
-        }
-
-        actualizarEstacionamientos();
-
-        setInterval(
-            actualizarEstacionamientos,
-            1000
-        );
-    </script>
-</body>
-
-</html>
+    setInterval(
+        actualizarEstacionamientos,
+        1000
+    );
+</script>
+{% endblock %}
