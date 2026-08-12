@@ -16,10 +16,12 @@ def redirigir_segun_rol(usuario):
             "estacionamientos:verificar_chapa"
         )
 
+
     if usuario.es_conductor:
         return redirect(
-            "estacionamientos:activos"
+            "estacionamientos:panel_conductor"
         )
+
 
     return redirect("usuarios:login")
 
@@ -81,9 +83,12 @@ def registrar_conductor(request):
                 ),
             )
 
+           
             return redirect(
-                "estacionamientos:activos"
+                "estacionamientos:panel_conductor"
             )
+
+
 
     else:
         form = RegistroConductorForm()

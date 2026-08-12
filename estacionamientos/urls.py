@@ -6,6 +6,13 @@ from . import views
 app_name = "estacionamientos"
 
 urlpatterns = [
+
+    path(
+    "panel/",
+    views.panel_conductor,
+    name="panel_conductor",
+),
+
     path(
         "iniciar/",
         views.iniciar_estacionamiento,

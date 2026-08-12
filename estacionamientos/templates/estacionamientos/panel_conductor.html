@@ -1,0 +1,511 @@
+{% extends "base.html" %}
+{% load moneda %}
+
+{% block title %}
+    Panel del conductor | LuquePark
+{% endblock %}
+
+{% block extra_css %}
+    body {
+        background-color: #070b3d;
+    }
+
+    .panel-container {
+        max-width: 620px;
+        margin: 0 auto;
+        padding: 20px 14px 40px;
+    }
+
+    .panel-header {
+        color: white;
+        margin-bottom: 22px;
+    }
+
+    .brand-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+    }
+
+    .summary-card,
+    .selection-card,
+    .active-card {
+        border: 1px solid rgba(
+            255,
+            255,
+            255,
+            0.12
+        );
+        border-radius: 18px;
+        background-color: #172065;
+        color: white;
+        overflow: hidden;
+    }
+
+    .summary-number {
+        color: #27d66b;
+        font-size: 2rem;
+        font-weight: 700;
+    }
+
+    .form-label {
+        color: rgba(
+            255,
+            255,
+            255,
+            0.78
+        );
+    }
+
+    .form-select {
+        min-height: 54px;
+        color: white;
+        background-color: #070b3d;
+        border: 1px solid rgba(
+            255,
+            255,
+            255,
+            0.15
+        );
+        font-size: 1rem;
+    }
+
+    .form-select:focus {
+        border-color: #27d66b;
+        box-shadow: 0 0 0 0.25rem
+            rgba(39, 214, 107, 0.20);
+    }
+
+    .form-select option {
+        color: white;
+        background-color: #070b3d;
+    }
+
+    .btn-start {
+        min-height: 58px;
+        border: none;
+        background-color: #27c85f;
+        color: #07112c;
+        font-size: 1.05rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+
+    .btn-start:hover {
+        background-color: #22b956;
+        color: #07112c;
+    }
+
+    .btn-map {
+        min-height: 48px;
+        border-color: #27d66b;
+        color: #27d66b;
+        font-weight: 600;
+    }
+
+    .btn-map:hover {
+        background-color: #27d66b;
+        color: #07112c;
+    }
+
+    .active-header {
+        background-color: #159447;
+        color: white;
+    }
+
+    .active-time {
+        color: #27d66b;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .navigation-card {
+        border: 1px solid rgba(
+            255,
+            255,
+            255,
+            0.12
+        );
+        border-radius: 18px;
+        background-color: #101755;
+        overflow: hidden;
+    }
+
+    .navigation-link {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 18px;
+        color: white;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(
+            255,
+            255,
+            255,
+            0.10
+        );
+    }
+
+    .navigation-link:last-child {
+        border-bottom: none;
+    }
+
+    .navigation-link:hover {
+        color: #27d66b;
+        background-color: rgba(
+            255,
+            255,
+            255,
+            0.04
+        );
+    }
+
+    .navigation-icon {
+        color: #27d66b;
+        font-size: 1.25rem;
+    }
+
+    .logout-button {
+        width: 100%;
+        padding: 15px 18px;
+        border: none;
+        background-color: transparent;
+        color: #ff6b6b;
+        text-align: left;
+    }
+
+    .logout-button:hover {
+        background-color: rgba(
+            255,
+            255,
+            255,
+            0.04
+        );
+    }
+{% endblock %}
+
+{% block content %}
+<main class="panel-container">
+    <header
+        class="panel-header d-flex
+               justify-content-between
+               align-items-center gap-3"
+    >
+        <div>
+            <div class="brand-title">
+                LuquePark
+            </div>
+
+            <div class="text-white-50">
+                Panel del conductor
+            </div>
+        </div>
+
+        <div class="text-end">
+            <div class="small text-white-50">
+                Bienvenido
+            </div>
+
+            <strong>
+                {{ request.user.get_full_name|default:request.user.username }}
+            </strong>
+        </div>
+    </header>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div
+                class="alert alert-{{ message.tags }}"
+                role="alert"
+            >
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <section class="summary-card shadow mb-3">
+        <div class="card-body p-4">
+            <div class="row align-items-center">
+                <div class="col-7">
+                    <div class="text-white-50">
+                        Vehículos registrados
+                    </div>
+
+                    <div class="summary-number">
+                        {{ cantidad_vehiculos }}
+                    </div>
+                </div>
+
+                <div class="col-5 text-end">
+                    <a
+                        href="{% url 'vehiculos:mis_vehiculos' %}"
+                        class="btn btn-outline-light"
+                    >
+                        Administrar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% for estacionamiento in estacionamientos_activos %}
+        <section
+            class="active-card shadow mb-3
+                   estacionamiento-activo"
+            data-inicio="{{ estacionamiento.fecha_inicio|date:'c' }}"
+        >
+            <header class="active-header p-3">
+                <div
+                    class="d-flex justify-content-between
+                           align-items-center"
+                >
+                    <strong>
+                        {{ estacionamiento.vehiculo.chapa }}
+                    </strong>
+
+                    <span class="badge bg-light text-success">
+                        ACTIVO
+                    </span>
+                </div>
+            </header>
+
+            <div class="card-body p-4">
+                <dl class="row mb-3">
+                    <dt class="col-4 text-white-50">
+                        Zona
+                    </dt>
+
+                    <dd class="col-8">
+                        {{ estacionamiento.zona.nombre }}
+                    </dd>
+
+                    <dt class="col-4 text-white-50">
+                        Inicio
+                    </dt>
+
+                    <dd class="col-8">
+                        {{ estacionamiento.fecha_inicio|date:"d/m/Y H:i:s" }}
+                    </dd>
+
+                    <dt class="col-4 text-white-50">
+                        Tarifa
+                    </dt>
+
+                    <dd class="col-8">
+                        Gs.
+                        {{ estacionamiento.tarifa_aplicada|numero_py }}
+                        por hora
+                    </dd>
+                </dl>
+
+                <div
+                    class="text-center p-3 rounded mb-3"
+                    style="background-color:#070b3d;"
+                >
+                    <div class="text-white-50">
+                        Tiempo transcurrido
+                    </div>
+
+                    <div class="active-time tiempo-activo">
+                        00:00:00
+                    </div>
+                </div>
+
+                <form
+                    method="post"
+                    action="{% url 'estacionamientos:finalizar' estacionamiento.id %}"
+                >
+                    {% csrf_token %}
+
+                    <button
+                        type="submit"
+                        class="btn btn-danger
+                               btn-action w-100"
+                        onclick="return confirm(
+                            '¿Desea finalizar este estacionamiento?'
+                        );"
+                    >
+                        Finalizar estacionamiento
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    {% empty %}
+        <section class="selection-card shadow mb-3">
+            <div class="card-body p-4">
+                <h2 class="h5 mb-4">
+                    Iniciar estacionamiento
+                </h2>
+
+                <form
+                    method="post"
+                    action="{% url 'estacionamientos:iniciar' %}"
+                    novalidate
+                >
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label
+                            for="{{ form.vehiculo.id_for_label }}"
+                            class="form-label"
+                        >
+                            Patente
+                        </label>
+
+                        {{ form.vehiculo }}
+
+                        {% for error in form.vehiculo.errors %}
+                            <div
+                                class="text-warning small mt-1"
+                            >
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-2">
+                        <label
+                            for="{{ form.zona.id_for_label }}"
+                            class="form-label"
+                        >
+                            Zona
+                        </label>
+
+                        {{ form.zona }}
+
+                        {% for error in form.zona.errors %}
+                            <div
+                                class="text-warning small mt-1"
+                            >
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <a
+                        href="{% url 'zonas:mapa' %}"
+                        class="btn btn-map w-100 mb-3"
+                    >
+                        Elegir zona en el mapa
+                    </a>
+
+                    {% if form.vehiculo.field.queryset.exists %}
+                        <button
+                            type="submit"
+                            class="btn btn-start w-100"
+                        >
+                            INICIAR ESTACIONAMIENTO
+                        </button>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            No tienes vehículos disponibles.
+                        </div>
+
+                        <a
+                            href="{% url 'vehiculos:registrar' %}"
+                            class="btn btn-light w-100"
+                        >
+                            Registrar vehículo
+                        </a>
+                    {% endif %}
+                </form>
+            </div>
+        </section>
+    {% endfor %}
+
+    <nav class="navigation-card shadow">
+        <a
+            href="{% url 'vehiculos:mis_vehiculos' %}"
+            class="navigation-link"
+        >
+            <span>Mis vehículos</span>
+            <span class="navigation-icon">›</span>
+        </a>
+
+        <a
+            href="{% url 'zonas:mapa' %}"
+            class="navigation-link"
+        >
+            <span>Zonas y mapa</span>
+            <span class="navigation-icon">›</span>
+        </a>
+
+        <a
+            href="{% url 'estacionamientos:historial' %}"
+            class="navigation-link"
+        >
+            <span>Historial de movimientos</span>
+            <span class="navigation-icon">›</span>
+        </a>
+
+        <form
+            method="post"
+            action="{% url 'usuarios:logout' %}"
+        >
+            {% csrf_token %}
+
+            <button
+                type="submit"
+                class="logout-button"
+            >
+                Cerrar sesión
+            </button>
+        </form>
+    </nav>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function actualizarTiemposActivos() {
+        const tarjetas = document.querySelectorAll(
+            ".estacionamiento-activo"
+        );
+
+        tarjetas.forEach((tarjeta) => {
+            const inicio = new Date(
+                tarjeta.dataset.inicio
+            );
+
+            const ahora = new Date();
+
+            const segundosTotales = Math.max(
+                0,
+                Math.floor((ahora - inicio) / 1000)
+            );
+
+            const horas = Math.floor(
+                segundosTotales / 3600
+            );
+
+            const minutos = Math.floor(
+                (segundosTotales % 3600) / 60
+            );
+
+            const segundos = segundosTotales % 60;
+
+            const tiempo = [
+                horas,
+                minutos,
+                segundos
+            ]
+                .map(
+                    (valor) =>
+                        String(valor).padStart(2, "0")
+                )
+                .join(":");
+
+            tarjeta.querySelector(
+                ".tiempo-activo"
+            ).textContent = tiempo;
+        });
+    }
+
+    actualizarTiemposActivos();
+
+    setInterval(
+        actualizarTiemposActivos,
+        1000
+    );
+</script>
+{% endblock %}

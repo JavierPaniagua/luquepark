@@ -41,6 +41,52 @@ def verificar_administrador(usuario):
 
 
 @login_required
+def panel_conductor(request):
+    verificar_conductor(request.user)
+
+    estacionamientos_activos = (
+        Estacionamiento.objects.filter(
+            conductor=request.user,
+            estado=Estacionamiento.Estado.ACTIVO,
+        )
+        .select_related(
+            "vehiculo",
+            "zona",
+        )
+        .order_by("-fecha_inicio")
+    )
+
+    zona_id = request.GET.get("zona")
+    datos_iniciales = {}
+
+    if zona_id:
+        datos_iniciales["zona"] = zona_id
+
+    form = IniciarEstacionamientoForm(
+        conductor=request.user,
+        initial=datos_iniciales,
+    )
+
+    contexto = {
+        "form": form,
+        "estacionamientos_activos": (
+            estacionamientos_activos
+        ),
+        "cantidad_vehiculos": (
+            request.user.vehiculos.filter(
+                activo=True,
+            ).count()
+        ),
+    }
+
+    return render(
+        request,
+        "estacionamientos/panel_conductor.html",
+        contexto,
+    )
+
+
+@login_required
 def iniciar_estacionamiento(request):
     verificar_conductor(request.user)
 
