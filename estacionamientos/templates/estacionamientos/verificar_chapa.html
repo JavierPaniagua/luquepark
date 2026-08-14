@@ -1,39 +1,143 @@
 {% extends "base.html" %}
+{% load moneda %}
 
 {% block title %}
     Verificar chapa | LuquePark
 {% endblock %}
 
 {% block extra_css %}
+    body {
+        min-height: 100vh;
+        background: linear-gradient(
+            160deg,
+            #001d3d 0%,
+            #002b5c 55%,
+            #0057b8 100%
+        );
+        background-attachment: fixed;
+    }
+
     .page-container {
-        max-width: 560px;
-        margin: 35px auto;
+        width: 100%;
+        max-width: 590px;
+        margin: 0 auto;
+        padding: 25px 0 40px;
     }
 
     .main-card,
     .result-card {
-        border: none;
         border-radius: 18px;
         overflow: hidden;
     }
 
-    .main-header {
-        background-color: #212529;
+    .main-card {
         color: white;
+        background-color: #002b5c;
+        border: 1px solid rgba(245, 196, 0, 0.50);
+    }
+
+    .main-header {
+        padding: 25px;
+        color: white;
+        background-color: #0057b8;
+        border-bottom: 4px solid #f5c400;
+        text-align: center;
+    }
+
+    .brand-title {
+        margin-bottom: 3px;
+        color: #f5c400;
+        font-size: 1.9rem;
+        font-weight: 800;
+    }
+
+    .brand-subtitle {
+        color: rgba(255, 255, 255, 0.84);
+    }
+
+    .instruction-text {
+        color: rgba(255, 255, 255, 0.72);
+    }
+
+    .form-label {
+        color: #f5c400;
+        font-weight: 700;
     }
 
     .chapa-input input {
+        display: block;
+        width: 100%;
+        min-height: 62px;
+        padding: 10px 14px;
+        color: white;
+        background-color: #001d3d;
+        border: 2px solid rgba(245, 196, 0, 0.55);
+        border-radius: 11px;
         text-align: center;
         font-size: 1.5rem;
-        font-weight: 700;
+        font-weight: 800;
         letter-spacing: 3px;
         text-transform: uppercase;
     }
 
-    .btn-verificar {
-        min-height: 52px;
-        font-size: 1.05rem;
+    .chapa-input input::placeholder {
+        color: rgba(255, 255, 255, 0.45);
+    }
+
+    .chapa-input input:focus {
+        color: white;
+        background-color: #001d3d;
+        border-color: #f5c400;
+        outline: none;
+        box-shadow:
+            0 0 0 0.25rem rgba(245, 196, 0, 0.22);
+    }
+
+    .field-error {
+        margin-top: 7px;
+        color: #ffb4bc;
+        font-size: 0.9rem;
         font-weight: 600;
+    }
+
+    .btn-verificar {
+        min-height: 54px;
+        color: #001d3d;
+        background-color: #f5c400;
+        border: 2px solid #f5c400;
+        font-size: 1.05rem;
+        font-weight: 800;
+    }
+
+    .btn-verificar:hover,
+    .btn-verificar:focus,
+    .btn-verificar:active {
+        color: #001d3d !important;
+        background-color: #d9ac00 !important;
+        border-color: #d9ac00 !important;
+    }
+
+    .logout-button {
+        min-height: 48px;
+        color: #ffb4bc;
+        background-color: #002b5c;
+        border: 1px solid #dc3545;
+        font-weight: 700;
+    }
+
+    .logout-button:hover,
+    .logout-button:focus {
+        color: white;
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .result-card {
+        color: white;
+        background-color: #002b5c;
+        border-right: 1px solid rgba(245, 196, 0, 0.35);
+        border-bottom: 1px solid rgba(245, 196, 0, 0.35);
+        border-left: 1px solid rgba(245, 196, 0, 0.35);
     }
 
     .estado-activo {
@@ -47,11 +151,82 @@
     .estado-no-registrado {
         border-top: 8px solid #6c757d;
     }
+
+    .result-plate {
+        color: #f5c400;
+        font-weight: 800;
+        letter-spacing: 2px;
+    }
+
+    .result-details dt {
+        color: #f5c400;
+        font-weight: 700;
+    }
+
+    .result-details dd {
+        color: white;
+    }
+
+    .result-amount {
+        color: #f5c400 !important;
+        font-weight: 800;
+    }
+
+    .result-message {
+        color: #ffb4bc;
+    }
+
+    .result-muted {
+        color: rgba(255, 255, 255, 0.68);
+    }
+
+    .btn-infraction {
+        min-height: 50px;
+        font-weight: 800;
+    }
+
+    @media (max-width: 576px) {
+        .page-container {
+            padding-top: 16px;
+            padding-bottom: 30px;
+        }
+
+        .main-card,
+        .result-card {
+            border-radius: 14px;
+        }
+
+        .main-header {
+            padding: 22px 18px;
+        }
+
+        .brand-title {
+            font-size: 1.6rem;
+        }
+
+        .main-body,
+        .result-body {
+            padding: 22px 18px !important;
+        }
+
+        .chapa-input input {
+            font-size: 1.3rem;
+        }
+
+        .result-details dt {
+            width: 47%;
+        }
+
+        .result-details dd {
+            width: 53%;
+        }
+    }
 {% endblock %}
 
 {% block content %}
 <main class="container px-3">
     <div class="page-container">
+
         {% if messages %}
             {% for message in messages %}
                 <div
@@ -63,19 +238,23 @@
             {% endfor %}
         {% endif %}
 
-        <section class="card main-card shadow mb-3">
-            <header class="main-header p-4 text-center">
-                <h1 class="h3 mb-1">
+        <section class="main-card shadow-lg mb-3">
+
+            <header class="main-header">
+
+                <h1 class="brand-title">
                     LuquePark
                 </h1>
 
-                <p class="mb-0">
+                <p class="brand-subtitle mb-0">
                     Control de estacionamiento
                 </p>
+
             </header>
 
-            <div class="card-body p-4">
-                <p class="text-muted text-center">
+            <div class="card-body main-body p-4">
+
+                <p class="instruction-text text-center">
                     Ingrese el número de chapa del vehículo.
                 </p>
 
@@ -83,9 +262,10 @@
                     {% csrf_token %}
 
                     <div class="mb-3 chapa-input">
+
                         <label
                             for="{{ form.chapa.id_for_label }}"
-                            class="form-label fw-semibold"
+                            class="form-label"
                         >
                             {{ form.chapa.label }}
                         </label>
@@ -93,19 +273,20 @@
                         {{ form.chapa }}
 
                         {% for error in form.chapa.errors %}
-                            <div class="text-danger small mt-2">
+                            <div class="field-error">
                                 {{ error }}
                             </div>
                         {% endfor %}
+
                     </div>
 
                     <button
                         type="submit"
-                        class="btn btn-dark
-                               btn-verificar w-100"
+                        class="btn btn-verificar w-100"
                     >
                         Verificar chapa
                     </button>
+
                 </form>
             </div>
         </section>
@@ -119,34 +300,38 @@
 
             <button
                 type="submit"
-                class="btn btn-outline-danger
-                       btn-action w-100"
+                class="btn logout-button w-100"
             >
                 Cerrar sesión
             </button>
         </form>
 
         {% if resultado %}
+
             {% if resultado.estado == "ACTIVO" %}
+
                 <section
-                    class="card result-card
-                           estado-activo shadow-sm"
+                    class="result-card estado-activo shadow-lg"
                 >
-                    <div class="card-body p-4">
-                        <div class="text-center mb-4">
+                    <div class="card-body result-body p-4">
+
+                        <header class="text-center mb-4">
+
                             <span class="badge bg-success fs-6">
                                 ESTACIONAMIENTO ACTIVO
                             </span>
 
                             <h2
-                                class="display-6 fw-bold
-                                       mt-3 mb-0"
+                                class="result-plate
+                                       display-6 mt-3 mb-0"
                             >
                                 {{ resultado.chapa }}
                             </h2>
-                        </div>
 
-                        <dl class="row mb-0">
+                        </header>
+
+                        <dl class="row mb-0 result-details">
+
                             <dt class="col-5">
                                 Vehículo
                             </dt>
@@ -185,7 +370,7 @@
 
                             <dd class="col-7">
                                 Gs.
-                                {{ resultado.estacionamiento.tarifa_aplicada }}
+                                {{ resultado.estacionamiento.tarifa_aplicada|numero_py }}
                                 por hora
                             </dd>
 
@@ -193,36 +378,41 @@
                                 Monto aproximado
                             </dt>
 
-                            <dd
-                                class="col-7 fw-bold
-                                       text-primary"
-                            >
+                            <dd class="col-7 result-amount">
                                 Gs.
-                                {{ resultado.monto_aproximado }}
+                                {{ resultado.monto_aproximado|numero_py }}
                             </dd>
+
                         </dl>
                     </div>
                 </section>
 
             {% elif resultado.estado == "SIN_ESTACIONAMIENTO" %}
+
                 <section
-                    class="card result-card
-                           estado-inactivo shadow-sm"
+                    class="result-card estado-inactivo shadow-lg"
                 >
-                    <div class="card-body p-4 text-center">
+                    <div
+                        class="card-body result-body
+                               p-4 text-center"
+                    >
+
                         <span class="badge bg-danger fs-6">
                             SIN ESTACIONAMIENTO
                         </span>
 
-                        <h2 class="display-6 fw-bold mt-3">
+                        <h2
+                            class="result-plate
+                                   display-6 mt-3"
+                        >
                             {{ resultado.chapa }}
                         </h2>
 
-                        <p class="text-danger fw-semibold mb-2">
+                        <p class="result-message fw-semibold mb-2">
                             {{ resultado.mensaje }}
                         </p>
 
-                        <p class="text-muted">
+                        <p class="result-muted">
                             Vehículo:
                             {{ resultado.vehiculo }}
                         </p>
@@ -230,41 +420,53 @@
                         <a
                             href="{% url 'infracciones:registrar' resultado.chapa %}"
                             class="btn btn-danger
-                                   btn-action w-100 mt-3"
+                                   btn-infraction w-100 mt-3"
                         >
                             Registrar infracción
                         </a>
+
                     </div>
                 </section>
 
             {% else %}
+
                 <section
-                    class="card result-card
-                           estado-no-registrado shadow-sm"
+                    class="result-card
+                           estado-no-registrado shadow-lg"
                 >
-                    <div class="card-body p-4 text-center">
+                    <div
+                        class="card-body result-body
+                               p-4 text-center"
+                    >
+
                         <span class="badge bg-secondary fs-6">
                             CHAPA NO REGISTRADA
                         </span>
 
-                        <h2 class="display-6 fw-bold mt-3">
+                        <h2
+                            class="result-plate
+                                   display-6 mt-3"
+                        >
                             {{ resultado.chapa }}
                         </h2>
 
-                        <p class="text-muted">
+                        <p class="result-muted">
                             {{ resultado.mensaje }}
                         </p>
 
                         <a
                             href="{% url 'infracciones:registrar' resultado.chapa %}"
                             class="btn btn-danger
-                                   btn-action w-100 mt-3"
+                                   btn-infraction w-100 mt-3"
                         >
                             Registrar infracción
                         </a>
+
                     </div>
                 </section>
+
             {% endif %}
+
         {% endif %}
     </div>
 </main>

@@ -6,142 +6,319 @@
 {% endblock %}
 
 {% block extra_css %}
-    .page-container {
-        max-width: 1100px;
-        margin: 30px auto;
+    body {
+        min-height: 100vh;
+        background:
+            linear-gradient(
+                145deg,
+                #eef4fb 0%,
+                #ffffff 50%,
+                #e4edf7 100%
+            );
+        background-attachment: fixed;
     }
 
-    .summary-card {
-        border: none;
+    .page-container {
+        width: 100%;
+        max-width: 1150px;
+        margin: 0 auto;
+        padding: 28px 0 45px;
+    }
+
+    .page-header {
+        padding: 20px 22px;
+        color: white;
+        background:
+            linear-gradient(
+                135deg,
+                #001d3d,
+                #0057b8
+            );
+        border-bottom: 5px solid #f5c400;
         border-radius: 16px;
     }
 
-    .summary-value {
+    .page-title {
+        margin-bottom: 3px;
+        color: #f5c400;
         font-size: 2rem;
-        font-weight: 700;
+        font-weight: 800;
+    }
+
+    .page-subtitle {
+        color: rgba(255, 255, 255, 0.78);
+    }
+
+    .btn-admin {
+        min-height: 44px;
+        color: #001d3d;
+        background-color: #f5c400;
+        border: 2px solid #f5c400;
+        font-weight: 800;
+    }
+
+    .btn-admin:hover,
+    .btn-admin:focus {
+        color: #001d3d;
+        background-color: #d9ac00;
+        border-color: #d9ac00;
+    }
+
+    .summary-card {
+        height: 100%;
+        background-color: white;
+        border: 1px solid rgba(0, 43, 92, 0.14);
+        border-top: 5px solid #0057b8;
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    .summary-card-gold {
+        border-top-color: #f5c400;
+    }
+
+    .summary-label {
+        color: #5e6b7b;
+        font-weight: 600;
+    }
+
+    .summary-value {
+        color: #002b5c;
+        font-size: 2rem;
+        font-weight: 800;
+    }
+
+    .summary-value-gold {
+        color: #b58f00;
+    }
+
+    .summary-value-active {
+        color: #198754;
+    }
+
+    .summary-money {
+        color: #0057b8;
+        font-size: 1.45rem;
+        font-weight: 800;
+        word-break: break-word;
     }
 
     .report-card {
-        border: none;
+        background-color: white;
+        border: 1px solid rgba(0, 43, 92, 0.14);
         border-radius: 18px;
         overflow: hidden;
+    }
+
+    .report-header {
+        padding: 18px;
+        color: white;
+        background-color: #002b5c;
+        border-bottom: 4px solid #f5c400;
+    }
+
+    .report-title {
+        color: #f5c400;
+        font-weight: 800;
+    }
+
+    .report-table {
+        margin-bottom: 0;
+    }
+
+    .report-table thead th {
+        padding: 14px 12px;
+        color: white;
+        background-color: #0057b8;
+        border-bottom: 3px solid #f5c400;
+        white-space: nowrap;
+    }
+
+    .report-table tbody td {
+        padding: 13px 12px;
+        color: #172033;
+        border-color: #dce3eb;
+    }
+
+    .report-table tbody tr:nth-child(even) {
+        background-color: rgba(0, 87, 184, 0.035);
+    }
+
+    .report-table tbody tr:hover {
+        background-color: rgba(245, 196, 0, 0.12);
+    }
+
+    .plate-value {
+        color: #002b5c;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+    }
+
+    .amount-value {
+        color: #0057b8;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    .empty-message {
+        padding: 45px !important;
+        color: #6c757d !important;
+    }
+
+    @media (max-width: 768px) {
+        .page-container {
+            padding-top: 16px;
+            padding-bottom: 30px;
+        }
+
+        .page-header {
+            align-items: flex-start !important;
+            padding: 18px;
+            border-radius: 14px;
+        }
+
+        .page-title {
+            font-size: 1.65rem;
+        }
+
+        .summary-value {
+            font-size: 1.7rem;
+        }
+
+        .summary-money {
+            font-size: 1.15rem;
+        }
+
+        .report-card {
+            border-radius: 14px;
+        }
     }
 {% endblock %}
 
 {% block content %}
 <main class="container px-3">
     <div class="page-container">
+
         <header
-            class="d-flex justify-content-between
-                   align-items-center gap-3 mb-4"
+            class="page-header d-flex
+                   justify-content-between
+                   align-items-center gap-3 mb-4 shadow"
         >
             <div>
-                <h1 class="h2 mb-1">
+                <h1 class="page-title">
                     Reporte general
                 </h1>
 
-                <p class="text-muted mb-0">
+                <p class="page-subtitle mb-0">
                     Resumen de estacionamientos de LuquePark
                 </p>
             </div>
 
             <a
                 href="{% url 'admin:index' %}"
-                class="btn btn-outline-secondary"
+                class="btn btn-admin"
             >
                 Administración
             </a>
         </header>
 
         <section class="row g-3 mb-4">
+
             <div class="col-6 col-lg-3">
-                <div
-                    class="card summary-card shadow-sm h-100"
-                >
-                    <div class="card-body">
-                        <div class="text-muted">
+                <article class="summary-card shadow-sm">
+                    <div class="card-body p-4">
+
+                        <div class="summary-label">
                             Total
                         </div>
 
                         <div class="summary-value">
                             {{ resumen.total }}
                         </div>
+
                     </div>
-                </div>
+                </article>
             </div>
 
             <div class="col-6 col-lg-3">
-                <div
-                    class="card summary-card shadow-sm h-100"
-                >
-                    <div class="card-body">
-                        <div class="text-muted">
+                <article class="summary-card shadow-sm">
+                    <div class="card-body p-4">
+
+                        <div class="summary-label">
                             Activos
                         </div>
 
                         <div
-                            class="summary-value text-success"
+                            class="summary-value
+                                   summary-value-active"
                         >
                             {{ resumen.activos }}
                         </div>
+
                     </div>
-                </div>
+                </article>
             </div>
 
             <div class="col-6 col-lg-3">
-                <div
-                    class="card summary-card shadow-sm h-100"
-                >
-                    <div class="card-body">
-                        <div class="text-muted">
+                <article class="summary-card shadow-sm">
+                    <div class="card-body p-4">
+
+                        <div class="summary-label">
                             Finalizados
                         </div>
 
-                        <div
-                            class="summary-value text-primary"
-                        >
+                        <div class="summary-value">
                             {{ resumen.finalizados }}
                         </div>
+
                     </div>
-                </div>
+                </article>
             </div>
 
             <div class="col-6 col-lg-3">
-                <div
-                    class="card summary-card shadow-sm h-100"
+                <article
+                    class="summary-card
+                           summary-card-gold shadow-sm"
                 >
-                    <div class="card-body">
-                        <div class="text-muted">
+                    <div class="card-body p-4">
+
+                        <div class="summary-label">
                             Recaudación
                         </div>
 
-                        <div class="fs-4 fw-bold text-primary">
-                            Gs. {{ resumen.monto_recaudado|numero_py }}
+                        <div class="summary-money">
+                            Gs.
+                            {{ resumen.monto_recaudado|numero_py }}
                         </div>
+
                     </div>
-                </div>
+                </article>
             </div>
+
         </section>
 
-        <section class="card report-card shadow-sm">
-            <div class="card-header bg-white p-3">
-                <h2 class="h5 mb-0">
+        <section class="report-card shadow">
+
+            <header class="report-header">
+                <h2 class="report-title h5 mb-0">
                     Últimos estacionamientos finalizados
                 </h2>
-            </div>
+            </header>
 
             <div class="table-responsive">
+
                 <table
                     class="table table-hover
-                           align-middle mb-0"
+                           align-middle report-table"
                 >
-                    <thead class="table-light">
+                    <thead>
                         <tr>
                             <th>Finalización</th>
                             <th>Chapa</th>
                             <th>Conductor</th>
                             <th>Zona</th>
                             <th>Tiempo</th>
+
                             <th class="text-end">
                                 Monto
                             </th>
@@ -149,13 +326,15 @@
                     </thead>
 
                     <tbody>
+
                         {% for estacionamiento in ultimos_estacionamientos %}
+
                             <tr>
                                 <td>
                                     {{ estacionamiento.fecha_fin|date:"d/m/Y H:i" }}
                                 </td>
 
-                                <td class="fw-semibold">
+                                <td class="plate-value">
                                     {{ estacionamiento.vehiculo.chapa }}
                                 </td>
 
@@ -172,27 +351,30 @@
                                 </td>
 
                                 <td
-                                    class="text-end fw-semibold"
+                                    class="amount-value text-end"
                                 >
-                                   
-                                    Gs. {{ estacionamiento.monto_final|numero_py }}
+                                    Gs.
+                                    {{ estacionamiento.monto_final|numero_py }}
                                 </td>
                             </tr>
 
                         {% empty %}
+
                             <tr>
                                 <td
                                     colspan="6"
-                                    class="text-center
-                                           text-muted p-5"
+                                    class="empty-message text-center"
                                 >
                                     Todavía no existen
                                     estacionamientos finalizados.
                                 </td>
                             </tr>
+
                         {% endfor %}
+
                     </tbody>
                 </table>
+
             </div>
         </section>
     </div>

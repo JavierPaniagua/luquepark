@@ -5,167 +5,419 @@
 {% endblock %}
 
 {% block extra_css %}
+    body {
+        min-height: 100vh;
+        background: linear-gradient(
+            160deg,
+            #001d3d 0%,
+            #002b5c 55%,
+            #0057b8 100%
+        );
+        background-attachment: fixed;
+    }
+
+    .page-container {
+        width: 100%;
+        max-width: 570px;
+        margin: 0 auto;
+        padding: 25px 0 40px;
+    }
+
     .parking-card {
-        max-width: 520px;
-        margin: 40px auto;
-        border: none;
-        border-radius: 18px;
+        color: white;
+        background-color: #002b5c;
+        border: 1px solid rgba(245, 196, 0, 0.50);
+        border-radius: 20px;
         overflow: hidden;
     }
 
     .parking-header {
-        background-color: #0d6efd;
+        padding: 26px;
         color: white;
+        background-color: #0057b8;
+        border-bottom: 4px solid #f5c400;
+        text-align: center;
+    }
+
+    .parking-title {
+        margin-bottom: 4px;
+        color: #f5c400;
+        font-size: 1.9rem;
+        font-weight: 800;
+    }
+
+    .parking-subtitle {
+        color: rgba(255, 255, 255, 0.84);
+    }
+
+    .driver-panel {
+        padding: 13px 15px;
+        margin-bottom: 22px;
+        color: white;
+        background-color: #001d3d;
+        border-left: 5px solid #f5c400;
+        border-radius: 9px;
+    }
+
+    .driver-label {
+        color: rgba(255, 255, 255, 0.65);
+    }
+
+    .driver-name {
+        color: #f5c400;
+    }
+
+    .form-label {
+        color: #f5c400;
+        font-weight: 700;
+    }
+
+    .parking-card input,
+    .parking-card select,
+    .parking-card textarea {
+        display: block;
+        width: 100%;
+        min-height: 50px;
+        padding: 10px 13px;
+        color: white;
+        background-color: #001d3d;
+        border: 1px solid rgba(245, 196, 0, 0.55);
+        border-radius: 10px;
+        font-size: 1rem;
+    }
+
+    .parking-card input:focus,
+    .parking-card select:focus,
+    .parking-card textarea:focus {
+        color: white;
+        background-color: #001d3d;
+        border-color: #f5c400;
+        outline: none;
+        box-shadow:
+            0 0 0 0.25rem rgba(245, 196, 0, 0.22);
+    }
+
+    .parking-card select option {
+        color: white;
+        background-color: #001d3d;
+    }
+
+    .field-error {
+        margin-top: 6px;
+        color: #ffb4bc;
+        font-size: 0.88rem;
+        font-weight: 600;
+    }
+
+    .btn-map {
+        min-height: 48px;
+        color: #f5c400;
+        background-color: transparent;
+        border: 2px solid #f5c400;
+        font-weight: 700;
+    }
+
+    .btn-map:hover,
+    .btn-map:focus {
+        color: #001d3d;
+        background-color: #f5c400;
+        border-color: #f5c400;
     }
 
     .btn-iniciar {
-        min-height: 52px;
+        min-height: 56px;
+        color: #001d3d;
+        background-color: #f5c400;
+        border: 2px solid #f5c400;
         font-size: 1.05rem;
-        font-weight: 600;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-iniciar:hover,
+    .btn-iniciar:focus,
+    .btn-iniciar:active {
+        color: #001d3d !important;
+        background-color: #d9ac00 !important;
+        border-color: #d9ac00 !important;
+    }
+
+    .btn-register {
+        min-height: 48px;
+        color: #f5c400;
+        border: 2px solid #f5c400;
+        font-weight: 700;
+    }
+
+    .btn-register:hover,
+    .btn-register:focus {
+        color: #001d3d;
+        background-color: #f5c400;
+        border-color: #f5c400;
+    }
+
+    .navigation-divider {
+        border-color: rgba(245, 196, 0, 0.32);
+        opacity: 1;
+    }
+
+    .navigation-card {
+        background-color: #001d3d;
+        border: 1px solid rgba(245, 196, 0, 0.30);
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .navigation-link {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 17px;
+        color: white;
+        text-decoration: none;
+        border-bottom:
+            1px solid rgba(245, 196, 0, 0.20);
+    }
+
+    .navigation-link:hover,
+    .navigation-link:focus {
+        color: #001d3d;
+        background-color: #f5c400;
+    }
+
+    .navigation-icon {
+        color: #f5c400;
+        font-size: 1.3rem;
+        font-weight: 800;
+    }
+
+    .navigation-link:hover .navigation-icon {
+        color: #001d3d;
+    }
+
+    .logout-form {
+        margin: 0;
+    }
+
+    .logout-button {
+        width: 100%;
+        padding: 14px 17px;
+        color: #ffb4bc;
+        background-color: transparent;
+        border: none;
+        text-align: left;
+    }
+
+    .logout-button:hover {
+        color: white;
+        background-color: #dc3545;
+    }
+
+    @media (max-width: 576px) {
+        .page-container {
+            padding-top: 16px;
+            padding-bottom: 30px;
+        }
+
+        .parking-card {
+            border-radius: 15px;
+        }
+
+        .parking-header {
+            padding: 22px 18px;
+        }
+
+        .parking-title {
+            font-size: 1.6rem;
+        }
+
+        .parking-body {
+            padding: 23px 18px !important;
+        }
     }
 {% endblock %}
 
 {% block content %}
 <main class="container px-3">
-    <div class="card parking-card shadow">
-        <header class="parking-header p-4 text-center">
-            <h1 class="h3 mb-1">
-                LuquePark
-            </h1>
+    <div class="page-container">
 
-            <p class="mb-0">
-                Iniciar estacionamiento
-            </p>
-        </header>
+        <section class="parking-card shadow-lg">
 
-        <div class="card-body p-4">
-            {% if messages %}
-                {% for message in messages %}
-                    <div
-                        class="alert alert-{{ message.tags }}"
-                        role="alert"
-                    >
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
+            <header class="parking-header">
 
-            <div class="mb-4">
-                <span class="text-muted">
-                    Conductor:
-                </span>
+                <h1 class="parking-title">
+                    LuquePark
+                </h1>
 
-                <strong>
-                    {{ request.user.get_full_name|default:request.user.username }}
-                </strong>
-            </div>
+                <p class="parking-subtitle mb-0">
+                    Iniciar estacionamiento
+                </p>
 
-            <form method="post" novalidate>
-                {% csrf_token %}
+            </header>
 
-                {% if form.non_field_errors %}
-                    <div class="alert alert-danger">
-                        {{ form.non_field_errors }}
-                    </div>
-                {% endif %}
+            <div class="card-body parking-body p-4">
 
-                <div class="mb-3">
-                    <label
-                        for="{{ form.vehiculo.id_for_label }}"
-                        class="form-label fw-semibold"
-                    >
-                        {{ form.vehiculo.label }}
-                    </label>
-
-                    {{ form.vehiculo }}
-
-                    {% for error in form.vehiculo.errors %}
-                        <div class="text-danger small mt-1">
-                            {{ error }}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div
+                            class="alert alert-{{ message.tags }}"
+                            role="alert"
+                        >
+                            {{ message }}
                         </div>
                     {% endfor %}
-                </div>
-
-                <div class="mb-3">
-                    <label
-                        for="{{ form.zona.id_for_label }}"
-                        class="form-label fw-semibold"
-                    >
-                        {{ form.zona.label }}
-                    </label>
-
-                    {{ form.zona }}
-
-                    {% for error in form.zona.errors %}
-                        <div class="text-danger small mt-1">
-                            {{ error }}
-                        </div>
-                    {% endfor %}
-
-                    <a
-                        href="{% url 'zonas:mapa' %}"
-                        class="btn btn-outline-success w-100 mt-2"
-                    >
-                        Elegir zona en el mapa
-                    </a>
-                </div>
-
-                {% if form.vehiculo.field.queryset.exists %}
-                    <button
-                        type="submit"
-                        class="btn btn-primary
-                               btn-iniciar w-100 mt-2"
-                    >
-                        Iniciar estacionamiento
-                    </button>
-                {% else %}
-                    <div class="alert alert-warning">
-                        No tienes vehículos disponibles para iniciar
-                        un estacionamiento.
-                    </div>
-
-                    <a
-                        href="{% url 'vehiculos:registrar' %}"
-                        class="btn btn-outline-primary w-100"
-                    >
-                        Registrar un vehículo
-                    </a>
                 {% endif %}
-            </form>
 
-            <hr class="my-4">
+                <section class="driver-panel">
 
-            <nav class="d-grid gap-2">
-                <a
-                    href="{% url 'estacionamientos:activos' %}"
-                    class="btn btn-outline-primary btn-action"
-                >
-                    Ver estacionamientos activos
-                </a>
+                    <span class="driver-label">
+                        Conductor:
+                    </span>
 
-                <a
-                    href="{% url 'vehiculos:mis_vehiculos' %}"
-                    class="btn btn-outline-secondary btn-action"
-                >
-                    Mis vehículos
-                </a>
+                    <strong class="driver-name">
+                        {{ request.user.get_full_name|default:request.user.username }}
+                    </strong>
 
-                <form
-                    method="post"
-                    action="{% url 'usuarios:logout' %}"
-                >
+                </section>
+
+                <form method="post" novalidate>
                     {% csrf_token %}
 
-                    <button
-                        type="submit"
-                        class="btn btn-outline-danger
-                               btn-action w-100"
-                    >
-                        Cerrar sesión
-                    </button>
+                    {% if form.non_field_errors %}
+                        <div
+                            class="alert alert-danger"
+                            role="alert"
+                        >
+                            {% for error in form.non_field_errors %}
+                                <div>
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+
+                        <label
+                            for="{{ form.vehiculo.id_for_label }}"
+                            class="form-label"
+                        >
+                            {{ form.vehiculo.label }}
+                        </label>
+
+                        {{ form.vehiculo }}
+
+                        {% for error in form.vehiculo.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label
+                            for="{{ form.zona.id_for_label }}"
+                            class="form-label"
+                        >
+                            {{ form.zona.label }}
+                        </label>
+
+                        {{ form.zona }}
+
+                        {% for error in form.zona.errors %}
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                        <a
+                            href="{% url 'zonas:mapa' %}"
+                            class="btn btn-map w-100 mt-2"
+                        >
+                            Elegir zona en el mapa
+                        </a>
+
+                    </div>
+
+                    {% if form.vehiculo.field.queryset.exists %}
+
+                        <button
+                            type="submit"
+                            class="btn btn-iniciar w-100 mt-2"
+                        >
+                            INICIAR ESTACIONAMIENTO
+                        </button>
+
+                    {% else %}
+
+                        <div
+                            class="alert alert-warning"
+                            role="alert"
+                        >
+                            No tienes vehículos disponibles para
+                            iniciar un estacionamiento.
+                        </div>
+
+                        <a
+                            href="{% url 'vehiculos:registrar' %}"
+                            class="btn btn-register w-100"
+                        >
+                            Registrar un vehículo
+                        </a>
+
+                    {% endif %}
+
                 </form>
-            </nav>
-        </div>
+
+                <hr class="navigation-divider my-4">
+
+                <nav class="navigation-card">
+
+                    <a
+                        href="{% url 'estacionamientos:activos' %}"
+                        class="navigation-link"
+                    >
+                        <span>Ver estacionamientos activos</span>
+                        <span class="navigation-icon">›</span>
+                    </a>
+
+                    <a
+                        href="{% url 'vehiculos:mis_vehiculos' %}"
+                        class="navigation-link"
+                    >
+                        <span>Mis vehículos</span>
+                        <span class="navigation-icon">›</span>
+                    </a>
+
+                    <a
+                        href="{% url 'estacionamientos:historial' %}"
+                        class="navigation-link"
+                    >
+                        <span>Historial</span>
+                        <span class="navigation-icon">›</span>
+                    </a>
+
+                    <form
+                        method="post"
+                        action="{% url 'usuarios:logout' %}"
+                        class="logout-form"
+                    >
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="logout-button"
+                        >
+                            Cerrar sesión
+                        </button>
+                    </form>
+
+                </nav>
+
+            </div>
+        </section>
     </div>
 </main>
 {% endblock %}

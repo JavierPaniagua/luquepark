@@ -10,42 +10,59 @@
         content="width=device-width, initial-scale=1"
     >
 
+    <meta
+        name="description"
+        content="LuquePark - Sistema de Estacionamiento Medido de Luque"
+    >
+
+    <meta
+        name="theme-color"
+        content="#002B5C"
+    >
+
     <title>
         {% block title %}
             LuquePark
         {% endblock %}
     </title>
 
-    <meta
-        name="theme-color"
-        content="#0d6efd"
-    >
-
+    <!-- Manifest de la PWA -->
     <link
         rel="manifest"
         href="{% static 'pwa/manifest.json' %}"
     >
 
+    <!-- Icono de LuquePark -->
     <link
         rel="icon"
         href="{% static 'pwa/icon.svg' %}"
         type="image/svg+xml"
     >
 
+    <!-- Bootstrap 5 -->
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
 
+    <!-- Colores globales azul y oro -->
+    <link
+        rel="stylesheet"
+        href="{% static 'css/luquepark.css' %}"
+    >
+
     <style>
         body {
             min-height: 100vh;
-            background-color: #f4f6f9;
+            margin: 0;
         }
 
         .luquepark-container {
+            width: 100%;
             max-width: 1100px;
             margin: 30px auto;
+            padding-right: 15px;
+            padding-left: 15px;
         }
 
         .btn-action {
@@ -65,10 +82,12 @@
     {% block content %}
     {% endblock %}
 
+    <!-- Bootstrap JavaScript -->
     <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     ></script>
 
+    <!-- Registro de la PWA -->
     <script
         src="{% static 'pwa/register.js' %}"
     ></script>

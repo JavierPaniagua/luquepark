@@ -12,72 +12,260 @@
 {% endblock %}
 
 {% block extra_css %}
+    body {
+        min-height: 100vh;
+        background: linear-gradient(
+            160deg,
+            #001d3d 0%,
+            #002b5c 55%,
+            #0057b8 100%
+        );
+        background-attachment: fixed;
+    }
+
     .page-container {
-        max-width: 1000px;
-        margin: 25px auto;
+        width: 100%;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 24px 0 40px;
     }
 
     .map-card {
-        border: none;
+        background-color: #002b5c;
+        border: 1px solid rgba(245, 196, 0, 0.50);
         border-radius: 18px;
         overflow: hidden;
     }
 
     .map-header {
-        background-color: #0d6efd;
+        padding: 20px;
         color: white;
+        background-color: #0057b8;
+        border-bottom: 4px solid #f5c400;
+    }
+
+    .map-title {
+        margin-bottom: 4px;
+        color: #f5c400;
+        font-size: 1.9rem;
+        font-weight: 800;
+    }
+
+    .map-subtitle {
+        color: rgba(255, 255, 255, 0.84);
+    }
+
+    .btn-back {
+        min-height: 44px;
+        color: #001d3d;
+        background-color: #f5c400;
+        border: 2px solid #f5c400;
+        font-weight: 800;
+    }
+
+    .btn-back:hover,
+    .btn-back:focus {
+        color: #001d3d;
+        background-color: #d9ac00;
+        border-color: #d9ac00;
     }
 
     #mapa {
         width: 100%;
         height: 65vh;
         min-height: 450px;
+        background-color: #dce6ef;
+        border-bottom: 3px solid #f5c400;
+    }
+
+    .map-footer {
+        padding: 15px 18px;
+        color: rgba(255, 255, 255, 0.72);
+        background-color: #002b5c;
+    }
+
+    .map-alert {
+        margin: 16px;
+        color: #001d3d;
+        background-color: #fff3b0;
+        border: 1px solid #f5c400;
+    }
+
+    /*
+     * Marcador personalizado azul y oro.
+     */
+    .luque-marker {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        color: #001d3d;
+        background-color: #f5c400;
+        border: 4px solid #0057b8;
+        border-radius: 50% 50% 50% 0;
+        box-shadow:
+            0 4px 10px rgba(0, 29, 61, 0.45);
+        transform: rotate(-45deg);
+    }
+
+    .luque-marker span {
+        display: block;
+        font-size: 0.68rem;
+        font-weight: 900;
+        transform: rotate(45deg);
+    }
+
+    /*
+     * Ventana emergente de Leaflet.
+     */
+    .leaflet-popup-content-wrapper {
+        color: #172033;
+        border-top: 5px solid #f5c400;
+        border-radius: 12px;
+    }
+
+    .leaflet-popup-content {
+        margin: 16px;
+    }
+
+    .popup-title {
+        display: block;
+        margin-bottom: 8px;
+        color: #002b5c;
+        font-size: 1.05rem;
+        font-weight: 800;
+    }
+
+    .popup-data {
+        margin-bottom: 4px;
+    }
+
+    .popup-description {
+        padding-top: 6px;
+        margin-top: 7px;
+        border-top: 1px solid #d9e1ea;
+    }
+
+    .btn-zone {
+        display: block;
+        width: 100%;
+        padding: 8px 10px;
+        margin-top: 13px;
+        color: #001d3d !important;
+        background-color: #f5c400;
+        border: 2px solid #f5c400;
+        border-radius: 7px;
+        font-weight: 800;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    .btn-zone:hover,
+    .btn-zone:focus {
+        color: #001d3d !important;
+        background-color: #d9ac00;
+        border-color: #d9ac00;
+    }
+
+    .leaflet-control-zoom a {
+        color: #002b5c !important;
+        font-weight: 800;
+    }
+
+    .leaflet-control-zoom a:hover {
+        color: #001d3d !important;
+        background-color: #f5c400;
+    }
+
+    @media (max-width: 576px) {
+        .page-container {
+            padding-top: 12px;
+            padding-bottom: 20px;
+        }
+
+        .map-card {
+            border-radius: 14px;
+        }
+
+        .map-header {
+            padding: 16px;
+        }
+
+        .map-title {
+            font-size: 1.55rem;
+        }
+
+        .map-subtitle {
+            font-size: 0.9rem;
+        }
+
+        #mapa {
+            height: 67vh;
+            min-height: 420px;
+        }
+
+        .btn-back {
+            padding-right: 12px;
+            padding-left: 12px;
+        }
     }
 {% endblock %}
 
 {% block content %}
 <main class="container-fluid px-3">
     <div class="page-container">
-        <section class="card map-card shadow">
-            <header class="map-header p-3">
+
+        <section class="map-card shadow-lg">
+
+            <header class="map-header">
+
                 <div
                     class="d-flex justify-content-between
                            align-items-center gap-3"
                 >
                     <div>
-                        <h1 class="h3 mb-1">
+                        <h1 class="map-title">
                             Mapa de zonas
                         </h1>
 
-                        <p class="mb-0">
+                        <p class="map-subtitle mb-0">
                             Zonas habilitadas en Luque
                         </p>
                     </div>
 
                     <a
                         href="{% url 'estacionamientos:activos' %}"
-                        class="btn btn-light"
+                        class="btn btn-back"
                     >
                         Volver
                     </a>
                 </div>
+
             </header>
 
             {% if not zonas %}
-                <div class="alert alert-warning m-3 mb-0">
-                    No existen zonas activas con coordenadas
-                    registradas.
+                <div
+                    class="alert map-alert mb-3"
+                    role="alert"
+                >
+                    No existen zonas activas con coordenadas registradas.
                 </div>
             {% endif %}
 
-            <div id="mapa"></div>
+            <div
+                id="mapa"
+                aria-label="Mapa de zonas de estacionamiento"
+            ></div>
 
-            <footer class="card-body">
-                <p class="text-muted small mb-0">
-                    Presiona un marcador para consultar la zona,
-                    la tarifa y el horario.
+            <footer class="map-footer">
+                <p class="small mb-0">
+                    Presiona un marcador o una zona pintada para
+                    consultar la tarifa, el horario e iniciar un
+                    estacionamiento.
                 </p>
             </footer>
+
         </section>
     </div>
 </main>
@@ -91,11 +279,13 @@
 ></script>
 
 <script>
-    const zonas = JSON.parse(
-        document.getElementById(
-            "zonas-data"
-        ).textContent
+    const elementoZonas = document.getElementById(
+        "zonas-data"
     );
+
+    const zonas = elementoZonas
+        ? JSON.parse(elementoZonas.textContent)
+        : [];
 
     const centroLuque = [
         -25.2670,
@@ -117,6 +307,21 @@
                 "&copy; colaboradores de OpenStreetMap"
         }
     ).addTo(mapa);
+
+    /*
+     * Marcador amarillo y azul de LuquePark.
+     */
+    const iconoLuquePark = L.divIcon({
+        className: "",
+        html: `
+            <div class="luque-marker">
+                <span>LP</span>
+            </div>
+        `,
+        iconSize: [34, 34],
+        iconAnchor: [17, 34],
+        popupAnchor: [0, -35]
+    });
 
     function escaparHTML(valor) {
         const elemento = document.createElement(
@@ -144,23 +349,24 @@
             encodeURIComponent(zona.id);
 
         return `
-            <div style="min-width: 220px;">
-                <strong>
+            <div style="min-width:220px;">
+
+                <strong class="popup-title">
                     ${escaparHTML(zona.nombre)}
                 </strong>
 
-                <div>
-                    Código:
+                <div class="popup-data">
+                    <strong>Código:</strong>
                     ${escaparHTML(zona.codigo)}
                 </div>
 
-                <div>
-                    Tarifa:
+                <div class="popup-data">
+                    <strong>Tarifa:</strong>
                     Gs. ${tarifa} por hora
                 </div>
 
-                <div>
-                    Horario:
+                <div class="popup-data">
+                    <strong>Horario:</strong>
                     ${escaparHTML(zona.hora_inicio)}
                     a
                     ${escaparHTML(zona.hora_fin)}
@@ -169,7 +375,7 @@
                 ${
                     zona.descripcion
                         ? `
-                            <div class="mt-1">
+                            <div class="popup-description">
                                 ${escaparHTML(
                                     zona.descripcion
                                 )}
@@ -180,11 +386,11 @@
 
                 <a
                     href="${enlaceEstacionamiento}"
-                    class="btn btn-primary
-                           btn-sm w-100 mt-3"
+                    class="btn-zone"
                 >
                     Estacionar en esta zona
                 </a>
+
             </div>
         `;
     }
@@ -197,27 +403,25 @@
         );
 
         /*
-         * Si la zona tiene una geometría GeoJSON,
-         * dibujamos sus calles o su sector.
+         * Dibuja las calles o polígonos GeoJSON.
+         * Si la zona no tiene un color configurado,
+         * utiliza el amarillo de LuquePark.
          */
         if (zona.geometria) {
             const capaZona = L.geoJSON(
                 zona.geometria,
                 {
                     style: function () {
+                        const colorZona =
+                            zona.color_mapa ||
+                            "#f5c400";
+
                         return {
-                            color:
-                                zona.color_mapa ||
-                                "#20c997",
-
+                            color: colorZona,
                             weight: 7,
-                            opacity: 0.85,
-
-                            fillColor:
-                                zona.color_mapa ||
-                                "#20c997",
-
-                            fillOpacity: 0.25,
+                            opacity: 0.90,
+                            fillColor: colorZona,
+                            fillOpacity: 0.25
                         };
                     },
 
@@ -235,7 +439,7 @@
                                 layer.setStyle({
                                     weight: 10,
                                     opacity: 1,
-                                    fillOpacity: 0.40,
+                                    fillOpacity: 0.42
                                 });
                             }
                         );
@@ -248,7 +452,7 @@
                                 );
                             }
                         );
-                    },
+                    }
                 }
             ).addTo(mapa);
 
@@ -258,8 +462,8 @@
         }
 
         /*
-         * Conservamos el marcador si la zona
-         * también tiene latitud y longitud.
+         * Conserva un marcador para cada zona
+         * que tenga latitud y longitud.
          */
         if (
             zona.latitud !== null &&
@@ -267,9 +471,12 @@
         ) {
             const marcador = L.marker(
                 [
-                    zona.latitud,
-                    zona.longitud
-                ]
+                    Number(zona.latitud),
+                    Number(zona.longitud)
+                ],
+                {
+                    icon: iconoLuquePark
+                }
             )
                 .addTo(mapa)
                 .bindPopup(contenido);
@@ -281,8 +488,8 @@
     });
 
     /*
-     * Ajustamos el mapa para mostrar todas
-     * las zonas registradas.
+     * Ajusta automáticamente el mapa para mostrar
+     * todas las zonas, líneas y marcadores.
      */
     if (elementosMapa.length > 0) {
         const grupo = L.featureGroup(
@@ -297,5 +504,16 @@
             );
         }
     }
+
+    /*
+     * Corrige el tamaño de Leaflet si la página
+     * se abre en una pantalla móvil.
+     */
+    window.setTimeout(
+        function () {
+            mapa.invalidateSize();
+        },
+        200
+    );
 </script>
 {% endblock %}

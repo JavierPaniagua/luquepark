@@ -5,71 +5,234 @@
 {% endblock %}
 
 {% block extra_css %}
+    body {
+        min-height: 100vh;
+        background: linear-gradient(
+            160deg,
+            #001d3d 0%,
+            #002b5c 55%,
+            #0057b8 100%
+        );
+        background-attachment: fixed;
+    }
+
     .page-container {
-        max-width: 560px;
-        margin: 35px auto;
+        width: 100%;
+        max-width: 590px;
+        margin: 0 auto;
+        padding: 25px 0 40px;
     }
 
     .infraction-card {
-        border: none;
+        color: white;
+        background-color: #002b5c;
+        border: 1px solid rgba(245, 196, 0, 0.45);
         border-radius: 20px;
         overflow: hidden;
     }
 
     .infraction-header {
-        background-color: #dc3545;
+        padding: 25px;
         color: white;
+        background-color: #0057b8;
+        border-top: 8px solid #dc3545;
+        border-bottom: 4px solid #f5c400;
+        text-align: center;
+    }
+
+    .infraction-title {
+        margin-bottom: 8px;
+        color: #f5c400;
+        font-size: 1.75rem;
+        font-weight: 800;
     }
 
     .chapa {
+        color: white;
         font-size: 2rem;
-        font-weight: 700;
+        font-weight: 800;
         letter-spacing: 3px;
     }
 
-    .btn-save {
-        min-height: 52px;
-        font-size: 1.05rem;
+    .vehicle-alert {
+        color: white;
+        background-color: #001d3d;
+        border: 1px solid rgba(245, 196, 0, 0.40);
+        border-left: 5px solid #f5c400;
+    }
+
+    .unregistered-alert {
+        color: #001d3d;
+        background-color: #fff3b0;
+        border: 1px solid #f5c400;
+        border-left: 5px solid #f5c400;
+    }
+
+    .form-label {
+        color: #f5c400;
+        font-weight: 700;
+    }
+
+    .infraction-card input,
+    .infraction-card select,
+    .infraction-card textarea {
+        display: block;
+        width: 100%;
+        min-height: 48px;
+        padding: 10px 13px;
+        color: white;
+        background-color: #001d3d;
+        border: 1px solid rgba(245, 196, 0, 0.55);
+        border-radius: 10px;
+        font-size: 1rem;
+    }
+
+    .infraction-card textarea {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+    .infraction-card input::placeholder,
+    .infraction-card textarea::placeholder {
+        color: rgba(255, 255, 255, 0.45);
+    }
+
+    .infraction-card input:focus,
+    .infraction-card select:focus,
+    .infraction-card textarea:focus {
+        color: white;
+        background-color: #001d3d;
+        border-color: #f5c400;
+        outline: none;
+        box-shadow:
+            0 0 0 0.25rem rgba(245, 196, 0, 0.22);
+    }
+
+    .infraction-card select option {
+        color: white;
+        background-color: #001d3d;
+    }
+
+    .form-text {
+        color: rgba(255, 255, 255, 0.60);
+    }
+
+    .field-error {
+        margin-top: 6px;
+        color: #ffb4bc;
+        font-size: 0.88rem;
         font-weight: 600;
+    }
+
+    .btn-save {
+        min-height: 54px;
+        font-size: 1.05rem;
+        font-weight: 800;
+    }
+
+    .btn-cancel {
+        min-height: 48px;
+        color: #f5c400;
+        border: 2px solid #f5c400;
+        font-weight: 700;
+    }
+
+    .btn-cancel:hover,
+    .btn-cancel:focus {
+        color: #001d3d;
+        background-color: #f5c400;
+        border-color: #f5c400;
+    }
+
+    @media (max-width: 576px) {
+        .page-container {
+            padding-top: 16px;
+            padding-bottom: 30px;
+        }
+
+        .infraction-card {
+            border-radius: 15px;
+        }
+
+        .infraction-header {
+            padding: 22px 18px;
+        }
+
+        .infraction-title {
+            font-size: 1.5rem;
+        }
+
+        .chapa {
+            font-size: 1.65rem;
+        }
+
+        .infraction-body {
+            padding: 22px 18px !important;
+        }
     }
 {% endblock %}
 
 {% block content %}
 <main class="container px-3">
     <div class="page-container">
-        <section class="card infraction-card shadow">
-            <header
-                class="infraction-header p-4 text-center"
-            >
-                <h1 class="h3 mb-2">
+
+        <section class="infraction-card shadow-lg">
+
+            <header class="infraction-header">
+
+                <h1 class="infraction-title">
                     Registrar infracción
                 </h1>
 
                 <div class="chapa">
                     {{ chapa }}
                 </div>
+
             </header>
 
-            <div class="card-body p-4">
+            <div class="card-body infraction-body p-4">
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div
+                            class="alert alert-{{ message.tags }}"
+                            role="alert"
+                        >
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
                 {% if vehiculo %}
-                    <div class="alert alert-secondary">
+
+                    <div class="alert vehicle-alert">
                         Vehículo registrado:
 
                         <strong>
                             {{ vehiculo }}
                         </strong>
                     </div>
+
                 {% else %}
-                    <div class="alert alert-warning">
+
+                    <div class="alert unregistered-alert">
                         La chapa no está registrada en LuquePark,
                         pero la infracción conservará el número
                         ingresado.
                     </div>
+
                 {% endif %}
 
                 {% if form.non_field_errors %}
-                    <div class="alert alert-danger">
-                        {{ form.non_field_errors }}
+                    <div
+                        class="alert alert-danger"
+                        role="alert"
+                    >
+                        {% for error in form.non_field_errors %}
+                            <div>
+                                {{ error }}
+                            </div>
+                        {% endfor %}
                     </div>
                 {% endif %}
 
@@ -77,10 +240,12 @@
                     {% csrf_token %}
 
                     {% for field in form %}
+
                         <div class="mb-3">
+
                             <label
                                 for="{{ field.id_for_label }}"
-                                class="form-label fw-semibold"
+                                class="form-label"
                             >
                                 {{ field.label }}
                             </label>
@@ -94,13 +259,13 @@
                             {% endif %}
 
                             {% for error in field.errors %}
-                                <div
-                                    class="text-danger small mt-1"
-                                >
+                                <div class="field-error">
                                     {{ error }}
                                 </div>
                             {% endfor %}
+
                         </div>
+
                     {% endfor %}
 
                     <button
@@ -113,15 +278,17 @@
                     >
                         Confirmar infracción
                     </button>
+
                 </form>
 
                 <a
                     href="{% url 'estacionamientos:verificar_chapa' %}"
-                    class="btn btn-outline-secondary
+                    class="btn btn-cancel
                            btn-action w-100 mt-3"
                 >
                     Cancelar y volver
                 </a>
+
             </div>
         </section>
     </div>

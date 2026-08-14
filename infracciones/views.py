@@ -1,5 +1,7 @@
 import re
 
+from django.core.paginator import Paginator
+from .models import Infraccion
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
@@ -89,5 +91,30 @@ def registrar_infraccion(request, chapa):
             "form": form,
             "chapa": chapa_normalizada,
             "vehiculo": vehiculo,
+        },
+    )
+
+@login_required
+def mis_infracciones(request):
+    if not request.user.es_conductor:
+        raise PermissionDenied(
+            "Solo los conductores pueden consultar sus infracciones."
+        )
+
+    infracciones = (
+        Infraccion.objects
+        .filter(vehiculo__propietario=request.user)
+        .select_related("vehiculo", "zona", "inspector")
+        .order_by("-fecha_registro")
+    )
+
+    paginador = Paginator(infracciones, 10)
+    pagina = paginador.get_page(request.GET.get("pagina"))
+
+    return render(
+        request,
+        "infracciones/mis_infracciones.html",
+        {
+            "pagina": pagina,
         },
     )

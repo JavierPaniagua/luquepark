@@ -6,65 +6,291 @@
 {% endblock %}
 
 {% block extra_css %}
+    body {
+        min-height: 100vh;
+        background: linear-gradient(
+            160deg,
+            #001d3d 0%,
+            #002b5c 55%,
+            #0057b8 100%
+        );
+        background-attachment: fixed;
+    }
+
     .page-container {
-        max-width: 650px;
-        margin: 30px auto;
+        width: 100%;
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 24px 0 40px;
+    }
+
+    .page-header {
+        padding-bottom: 16px;
+        border-bottom: 3px solid #f5c400;
+    }
+
+    .brand-title {
+        margin-bottom: 3px;
+        color: #f5c400;
+        font-size: 1.9rem;
+        font-weight: 800;
+    }
+
+    .page-subtitle {
+        color: rgba(255, 255, 255, 0.72);
+    }
+
+    .btn-vehicles {
+        min-height: 44px;
+        color: #f5c400;
+        background-color: transparent;
+        border: 2px solid #f5c400;
+        font-weight: 700;
+    }
+
+    .btn-vehicles:hover,
+    .btn-vehicles:focus {
+        color: #001d3d;
+        background-color: #f5c400;
+        border-color: #f5c400;
+    }
+
+    .btn-new {
+        min-height: 44px;
+        color: #001d3d;
+        background-color: #f5c400;
+        border: 2px solid #f5c400;
+        font-weight: 800;
+    }
+
+    .btn-new:hover,
+    .btn-new:focus {
+        color: #001d3d;
+        background-color: #d9ac00;
+        border-color: #d9ac00;
     }
 
     .parking-card {
-        border: none;
+        color: white;
+        background-color: #002b5c;
+        border: 1px solid rgba(245, 196, 0, 0.50);
         border-radius: 18px;
         overflow: hidden;
     }
 
     .parking-status {
-        background-color: #198754;
+        padding: 15px 18px;
+        color: white;
+        background-color: #0057b8;
+        border-bottom: 4px solid #f5c400;
+    }
+
+    .parking-plate {
+        color: #f5c400;
+        font-size: 1.2rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+    }
+
+    .active-badge {
+        color: #001d3d;
+        background-color: #f5c400;
+        font-weight: 800;
+    }
+
+    .parking-details dt {
+        color: #f5c400;
+        font-weight: 700;
+    }
+
+    .parking-details dd {
         color: white;
     }
 
+    .time-panel {
+        padding: 16px;
+        margin-bottom: 16px;
+        background-color: #001d3d;
+        border: 1px solid rgba(245, 196, 0, 0.35);
+        border-radius: 12px;
+        text-align: center;
+    }
+
+    .time-label,
+    .amount-label {
+        color: rgba(255, 255, 255, 0.68);
+    }
+
     .time-value {
+        color: #f5c400;
         font-size: 1.8rem;
-        font-weight: 700;
+        font-weight: 800;
+    }
+
+    .amount-panel {
+        padding: 14px;
+        margin-bottom: 20px;
+        text-align: center;
     }
 
     .amount-value {
-        color: #0d6efd;
-        font-size: 1.5rem;
+        color: #f5c400;
+        font-size: 1.55rem;
+        font-weight: 800;
+    }
+
+    .btn-finish {
+        min-height: 50px;
         font-weight: 700;
+    }
+
+    .empty-card {
+        color: white;
+        background-color: #002b5c;
+        border: 1px solid rgba(245, 196, 0, 0.50);
+        border-radius: 18px;
+    }
+
+    .empty-title {
+        color: #f5c400;
+        font-weight: 800;
+    }
+
+    .empty-text {
+        color: rgba(255, 255, 255, 0.70);
+    }
+
+    .btn-start {
+        min-height: 55px;
+        color: #001d3d;
+        background-color: #f5c400;
+        border: 2px solid #f5c400;
+        font-size: 1.05rem;
+        font-weight: 800;
+    }
+
+    .btn-start:hover,
+    .btn-start:focus {
+        color: #001d3d;
+        background-color: #d9ac00;
+        border-color: #d9ac00;
+    }
+
+    .navigation-card {
+        margin-top: 22px;
+        background-color: #002b5c;
+        border: 1px solid rgba(245, 196, 0, 0.45);
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    .navigation-link {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 18px;
+        color: white;
+        text-decoration: none;
+        border-bottom:
+            1px solid rgba(245, 196, 0, 0.20);
+    }
+
+    .navigation-link:hover,
+    .navigation-link:focus {
+        color: #001d3d;
+        background-color: #f5c400;
+    }
+
+    .navigation-icon {
+        color: #f5c400;
+        font-size: 1.3rem;
+        font-weight: 800;
+    }
+
+    .navigation-link:hover .navigation-icon {
+        color: #001d3d;
+    }
+
+    .logout-form {
+        margin: 0;
+    }
+
+    .logout-button {
+        width: 100%;
+        padding: 15px 18px;
+        color: #ffb4bc;
+        background-color: transparent;
+        border: none;
+        text-align: left;
+    }
+
+    .logout-button:hover,
+    .logout-button:focus {
+        color: white;
+        background-color: #dc3545;
+    }
+
+    @media (max-width: 576px) {
+        .page-container {
+            padding-top: 16px;
+            padding-bottom: 30px;
+        }
+
+        .page-header {
+            align-items: flex-start !important;
+        }
+
+        .brand-title {
+            font-size: 1.55rem;
+        }
+
+        .header-actions {
+            flex-direction: column;
+        }
+
+        .parking-card,
+        .empty-card,
+        .navigation-card {
+            border-radius: 14px;
+        }
     }
 {% endblock %}
 
 {% block content %}
 <main class="container px-3">
     <div class="page-container">
+
         <header
-            class="d-flex justify-content-between
-                   align-items-center mb-4"
+            class="page-header d-flex
+                   justify-content-between
+                   align-items-center gap-3 mb-4"
         >
             <div>
-                <h1 class="h3 mb-1">
+                <h1 class="brand-title">
                     LuquePark
                 </h1>
 
-                <p class="text-muted mb-0">
+                <p class="page-subtitle mb-0">
                     Estacionamientos activos
                 </p>
             </div>
 
-            <div class="d-flex gap-2">
+            <div class="header-actions d-flex gap-2">
+
                 <a
                     href="{% url 'vehiculos:mis_vehiculos' %}"
-                    class="btn btn-outline-secondary"
+                    class="btn btn-vehicles"
                 >
                     Vehículos
                 </a>
 
                 <a
                     href="{% url 'estacionamientos:iniciar' %}"
-                    class="btn btn-primary"
+                    class="btn btn-new"
                 >
                     Nuevo
                 </a>
+
             </div>
         </header>
 
@@ -80,24 +306,34 @@
         {% endif %}
 
         {% for estacionamiento in estacionamientos %}
+
             <article
-                class="card parking-card shadow-sm
+                class="parking-card shadow-lg
                        mb-4 estacionamiento"
                 data-inicio="{{ estacionamiento.fecha_inicio|date:'c' }}"
                 data-tarifa="{{ estacionamiento.tarifa_aplicada|unlocalize }}"
             >
-                <div class="parking-status p-3">
-                    <div class="d-flex justify-content-between">
-                        <strong>
+                <header class="parking-status">
+
+                    <div
+                        class="d-flex justify-content-between
+                               align-items-center gap-3"
+                    >
+                        <strong class="parking-plate">
                             {{ estacionamiento.vehiculo.chapa }}
                         </strong>
 
-                        <span>ACTIVO</span>
+                        <span class="badge active-badge">
+                            ACTIVO
+                        </span>
                     </div>
-                </div>
+
+                </header>
 
                 <div class="card-body p-4">
-                    <dl class="row mb-3">
+
+                    <dl class="row mb-3 parking-details">
+
                         <dt class="col-4">
                             Vehículo
                         </dt>
@@ -131,30 +367,32 @@
                             {{ estacionamiento.tarifa_aplicada }}
                             por hora
                         </dd>
+
                     </dl>
 
-                    <div
-                        class="text-center bg-light
-                               rounded p-3 mb-3"
-                    >
-                        <div class="text-muted">
+                    <section class="time-panel">
+
+                        <div class="time-label">
                             Tiempo transcurrido
                         </div>
 
                         <div class="time-value tiempo">
                             00:00:00
                         </div>
-                    </div>
 
-                    <div class="text-center mb-4">
-                        <div class="text-muted">
+                    </section>
+
+                    <section class="amount-panel">
+
+                        <div class="amount-label">
                             Monto aproximado
                         </div>
 
                         <div class="amount-value monto">
                             Gs. 0
                         </div>
-                    </div>
+
+                    </section>
 
                     <form
                         method="post"
@@ -165,7 +403,7 @@
                         <button
                             type="submit"
                             class="btn btn-danger
-                                   btn-action w-100"
+                                   btn-finish w-100"
                             onclick="return confirm(
                                 '¿Desea finalizar este estacionamiento?'
                             );"
@@ -173,71 +411,76 @@
                             Finalizar estacionamiento
                         </button>
                     </form>
+
                 </div>
             </article>
 
         {% empty %}
-            <div class="card border-0 shadow-sm">
+
+            <section class="empty-card shadow-lg">
                 <div class="card-body p-5 text-center">
-                    <h2 class="h5">
+
+                    <h2 class="empty-title h5">
                         No tienes estacionamientos activos
                     </h2>
 
-                    <p class="text-muted">
-                        Selecciona un vehículo y una zona
-                        para comenzar.
+                    <p class="empty-text">
+                        Selecciona un vehículo y una zona para comenzar.
                     </p>
 
                     <a
                         href="{% url 'estacionamientos:iniciar' %}"
-                        class="btn btn-primary
-                               btn-action w-100"
+                        class="btn btn-start w-100"
                     >
                         Iniciar estacionamiento
                     </a>
+
                 </div>
-            </div>
+            </section>
+
         {% endfor %}
 
-        <nav class="mt-4">
-            <div class="row g-2">
-                <div class="col-6">
-                    <a
-                        href="{% url 'estacionamientos:historial' %}"
-                        class="btn btn-outline-primary
-                               btn-action w-100"
-                    >
-                        Historial
-                    </a>
-                </div>
+        <nav class="navigation-card shadow">
 
-                <div class="col-6">
-                    <a
-                        href="{% url 'zonas:mapa' %}"
-                        class="btn btn-outline-success
-                               btn-action w-100"
-                    >
-                        Mapa de zonas
-                    </a>
-                </div>
+            <a
+                href="{% url 'estacionamientos:historial' %}"
+                class="navigation-link"
+            >
+                <span>Historial de estacionamientos</span>
+                <span class="navigation-icon">›</span>
+            </a>
 
-                <div class="col-12">
-                    <form
-                        method="post"
-                        action="{% url 'usuarios:logout' %}"
-                    >
-                        {% csrf_token %}
+            <a
+                href="{% url 'zonas:mapa' %}"
+                class="navigation-link"
+            >
+                <span>Mapa de zonas</span>
+                <span class="navigation-icon">›</span>
+            </a>
 
-                        <button
-                            type="submit"
-                            class="btn btn-outline-danger
-                                   btn-action w-100"
-                        >
-                            Cerrar sesión
-                        </button>
-                    </form>
-                </div>
-            </div>
+            <a
+                href="{% url 'infracciones:mis_infracciones' %}"
+                class="navigation-link"
+            >
+                <span>Mis infracciones</span>
+                <span class="navigation-icon">›</span>
+            </a>
+
+            <form
+                method="post"
+                action="{% url 'usuarios:logout' %}"
+                class="logout-form"
+            >
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="logout-button"
+                >
+                    Cerrar sesión
+                </button>
+            </form>
+
         </nav>
     </div>
 </main>
@@ -290,21 +533,30 @@
             const monto =
                 tarifa * segundosTotales / 3600;
 
-            tarjeta.querySelector(
+            const elementoTiempo = tarjeta.querySelector(
                 ".tiempo"
-            ).textContent = tiempoFormateado;
+            );
 
-            tarjeta.querySelector(
+            const elementoMonto = tarjeta.querySelector(
                 ".monto"
-            ).textContent =
-                "Gs. " +
-                monto.toLocaleString(
-                    "es-PY",
-                    {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                    }
-                );
+            );
+
+            if (elementoTiempo) {
+                elementoTiempo.textContent =
+                    tiempoFormateado;
+            }
+
+            if (elementoMonto) {
+                elementoMonto.textContent =
+                    "Gs. " +
+                    monto.toLocaleString(
+                        "es-PY",
+                        {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        }
+                    );
+            }
         });
     }
 

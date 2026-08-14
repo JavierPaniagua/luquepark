@@ -1,0 +1,412 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Mis infracciones | LuquePark
+{% endblock %}
+
+{% block extra_css %}
+    body {
+        min-height: 100vh;
+        background: linear-gradient(
+            160deg,
+            #001d3d 0%,
+            #002b5c 55%,
+            #0057b8 100%
+        );
+        background-attachment: fixed;
+    }
+
+    .page-container {
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 25px 0 40px;
+    }
+
+    .page-header {
+        padding-bottom: 16px;
+        border-bottom: 3px solid #f5c400;
+    }
+
+    .page-title {
+        margin-bottom: 3px;
+        color: #f5c400;
+        font-size: 1.9rem;
+        font-weight: 800;
+    }
+
+    .page-subtitle {
+        color: rgba(255, 255, 255, 0.72);
+    }
+
+    .btn-back {
+        min-height: 44px;
+        color: #f5c400;
+        background-color: transparent;
+        border: 2px solid #f5c400;
+        font-weight: 700;
+    }
+
+    .btn-back:hover,
+    .btn-back:focus {
+        color: #001d3d;
+        background-color: #f5c400;
+        border-color: #f5c400;
+    }
+
+    .infraction-card {
+        color: white;
+        background-color: #002b5c;
+        border: 1px solid rgba(245, 196, 0, 0.45);
+        border-left: 7px solid #f5c400;
+        border-radius: 16px;
+    }
+
+    .infraction-plate {
+        color: #f5c400;
+        font-weight: 800;
+        letter-spacing: 1px;
+    }
+
+    .infraction-date {
+        color: rgba(255, 255, 255, 0.65);
+    }
+
+    .infraction-divider {
+        margin: 15px 0;
+        border-color: rgba(245, 196, 0, 0.30);
+        opacity: 1;
+    }
+
+    .data-label {
+        display: block;
+        margin-bottom: 3px;
+        color: #f5c400;
+        font-weight: 700;
+    }
+
+    .data-value {
+        color: rgba(255, 255, 255, 0.82);
+    }
+
+    .status-pending {
+        background-color: #dc3545;
+    }
+
+    .status-paid {
+        background-color: #198754;
+    }
+
+    .status-cancelled {
+        background-color: #6c757d;
+    }
+
+    .status-other {
+        color: #001d3d;
+        background-color: #f5c400;
+    }
+
+    .empty-card {
+        color: white;
+        background-color: #002b5c;
+        border: 1px solid rgba(245, 196, 0, 0.45);
+        border-radius: 16px;
+    }
+
+    .empty-icon {
+        color: #f5c400;
+        font-size: 3rem;
+        font-weight: 800;
+    }
+
+    .empty-title {
+        color: #f5c400;
+        font-weight: 800;
+    }
+
+    .empty-text {
+        color: rgba(255, 255, 255, 0.68);
+    }
+
+    .pagination .page-link {
+        color: #f5c400;
+        background-color: #002b5c;
+        border-color: rgba(245, 196, 0, 0.45);
+    }
+
+    .pagination .page-link:hover {
+        color: #001d3d;
+        background-color: #f5c400;
+        border-color: #f5c400;
+    }
+
+    .pagination .page-item.active .page-link {
+        color: #001d3d;
+        background-color: #f5c400;
+        border-color: #f5c400;
+        font-weight: 800;
+    }
+
+    @media (max-width: 576px) {
+        .page-container {
+            padding-top: 16px;
+            padding-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 1.55rem;
+        }
+
+        .infraction-card,
+        .empty-card {
+            border-radius: 14px;
+        }
+    }
+{% endblock %}
+
+{% block content %}
+<main class="container px-3">
+    <div class="page-container">
+
+        <header
+            class="page-header d-flex
+                   justify-content-between
+                   align-items-center gap-3 mb-4"
+        >
+            <div>
+                <h1 class="page-title">
+                    Mis infracciones
+                </h1>
+
+                <p class="page-subtitle mb-0">
+                    Infracciones registradas para tus vehículos.
+                </p>
+            </div>
+
+            <a
+                href="{% url 'estacionamientos:panel_conductor' %}"
+                class="btn btn-back"
+            >
+                Volver
+            </a>
+        </header>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div
+                    class="alert alert-{{ message.tags }}"
+                    role="alert"
+                >
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if pagina %}
+
+            <section class="row g-3">
+
+                {% for infraccion in pagina %}
+
+                    <div class="col-12">
+                        <article class="infraction-card shadow-lg">
+                            <div class="card-body p-4">
+
+                                <header
+                                    class="d-flex
+                                           justify-content-between
+                                           align-items-start
+                                           gap-3"
+                                >
+                                    <div>
+                                        <h2
+                                            class="infraction-plate
+                                                   h5 mb-1"
+                                        >
+                                            Chapa:
+                                            {{ infraccion.chapa }}
+                                        </h2>
+
+                                        <span class="infraction-date">
+                                            {{ infraccion.fecha_registro|date:"d/m/Y H:i" }}
+                                        </span>
+                                    </div>
+
+                                    {% if infraccion.estado == "PENDIENTE" %}
+
+                                        <span
+                                            class="badge
+                                                   status-pending"
+                                        >
+                                            Pendiente
+                                        </span>
+
+                                    {% elif infraccion.estado == "PAGADA" %}
+
+                                        <span
+                                            class="badge
+                                                   status-paid"
+                                        >
+                                            Pagada
+                                        </span>
+
+                                    {% elif infraccion.estado == "ANULADA" %}
+
+                                        <span
+                                            class="badge
+                                                   status-cancelled"
+                                        >
+                                            Anulada
+                                        </span>
+
+                                    {% else %}
+
+                                        <span
+                                            class="badge
+                                                   status-other"
+                                        >
+                                            {{ infraccion.get_estado_display }}
+                                        </span>
+
+                                    {% endif %}
+                                </header>
+
+                                <hr class="infraction-divider">
+
+                                <div class="row g-3">
+
+                                    <div class="col-md-6">
+                                        <strong class="data-label">
+                                            Vehículo
+                                        </strong>
+
+                                        <div class="data-value">
+                                            {% if infraccion.vehiculo %}
+                                                {{ infraccion.vehiculo }}
+                                            {% else %}
+                                                No asociado
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <strong class="data-label">
+                                            Zona
+                                        </strong>
+
+                                        <div class="data-value">
+                                            {% if infraccion.zona %}
+                                                {{ infraccion.zona }}
+                                            {% else %}
+                                                No especificada
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <strong class="data-label">
+                                            Motivo
+                                        </strong>
+
+                                        <div class="data-value">
+                                            {{ infraccion.get_motivo_display }}
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <strong class="data-label">
+                                            Inspector
+                                        </strong>
+
+                                        <div class="data-value">
+                                            {{ infraccion.inspector.get_full_name|default:infraccion.inspector.username }}
+                                        </div>
+                                    </div>
+
+                                    {% if infraccion.observaciones %}
+                                        <div class="col-12">
+                                            <strong class="data-label">
+                                                Observaciones
+                                            </strong>
+
+                                            <div class="data-value">
+                                                {{ infraccion.observaciones }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                {% endfor %}
+
+            </section>
+
+            {% if pagina.has_other_pages %}
+                <nav
+                    class="mt-4"
+                    aria-label="Paginación de infracciones"
+                >
+                    <ul class="pagination justify-content-center">
+
+                        {% if pagina.has_previous %}
+                            <li class="page-item">
+                                <a
+                                    class="page-link"
+                                    href="?pagina={{ pagina.previous_page_number }}"
+                                >
+                                    Anterior
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        <li class="page-item active">
+                            <span class="page-link">
+                                Página {{ pagina.number }}
+                                de {{ pagina.paginator.num_pages }}
+                            </span>
+                        </li>
+
+                        {% if pagina.has_next %}
+                            <li class="page-item">
+                                <a
+                                    class="page-link"
+                                    href="?pagina={{ pagina.next_page_number }}"
+                                >
+                                    Siguiente
+                                </a>
+                            </li>
+                        {% endif %}
+
+                    </ul>
+                </nav>
+            {% endif %}
+
+        {% else %}
+
+            <section class="empty-card shadow-lg">
+                <div class="card-body text-center py-5">
+
+                    <div class="empty-icon mb-3">
+                        ✓
+                    </div>
+
+                    <h2 class="empty-title h4">
+                        No tienes infracciones
+                    </h2>
+
+                    <p class="empty-text mb-0">
+                        No existen infracciones registradas
+                        para tus vehículos.
+                    </p>
+
+                </div>
+            </section>
+
+        {% endif %}
+
+    </div>
+</main>
+{% endblock %}

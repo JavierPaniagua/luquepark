@@ -7,126 +7,147 @@
 
 {% block extra_css %}
     body {
-        background-color: #070b3d;
+        min-height: 100vh;
+        background: linear-gradient(
+            160deg,
+            #001d3d 0%,
+            #002b5c 55%,
+            #0057b8 100%
+        );
+        background-attachment: fixed;
     }
 
     .panel-container {
+        width: 100%;
         max-width: 620px;
         margin: 0 auto;
-        padding: 20px 14px 40px;
+        padding: 22px 14px 40px;
     }
 
     .panel-header {
-        color: white;
+        padding-bottom: 16px;
         margin-bottom: 22px;
+        color: white;
+        border-bottom: 3px solid #f5c400;
     }
 
     .brand-title {
+        color: #f5c400;
         font-size: 1.8rem;
-        font-weight: 700;
+        font-weight: 800;
+        letter-spacing: 0.5px;
     }
 
     .summary-card,
     .selection-card,
     .active-card {
-        border: 1px solid rgba(
-            255,
-            255,
-            255,
-            0.12
-        );
-        border-radius: 18px;
-        background-color: #172065;
         color: white;
+        background-color: #002b5c;
+        border: 1px solid rgba(245, 196, 0, 0.45);
+        border-radius: 18px;
         overflow: hidden;
     }
 
     .summary-number {
-        color: #27d66b;
+        color: #f5c400;
         font-size: 2rem;
-        font-weight: 700;
+        font-weight: 800;
     }
 
     .form-label {
-        color: rgba(
-            255,
-            255,
-            255,
-            0.78
-        );
+        color: rgba(255, 255, 255, 0.88);
+        font-weight: 600;
     }
 
     .form-select {
         min-height: 54px;
         color: white;
-        background-color: #070b3d;
-        border: 1px solid rgba(
-            255,
-            255,
-            255,
-            0.15
-        );
+        background-color: #001d3d;
+        border: 1px solid rgba(245, 196, 0, 0.55);
+        border-radius: 10px;
         font-size: 1rem;
     }
 
     .form-select:focus {
-        border-color: #27d66b;
-        box-shadow: 0 0 0 0.25rem
-            rgba(39, 214, 107, 0.20);
+        color: white;
+        background-color: #001d3d;
+        border-color: #f5c400;
+        box-shadow:
+            0 0 0 0.25rem rgba(245, 196, 0, 0.22);
     }
 
     .form-select option {
         color: white;
-        background-color: #070b3d;
+        background-color: #001d3d;
+    }
+
+    .btn-admin {
+        color: white;
+        border: 1px solid #f5c400;
+        font-weight: 600;
+    }
+
+    .btn-admin:hover,
+    .btn-admin:focus {
+        color: #001d3d;
+        background-color: #f5c400;
+        border-color: #f5c400;
     }
 
     .btn-start {
         min-height: 58px;
-        border: none;
-        background-color: #27c85f;
-        color: #07112c;
+        color: #001d3d;
+        background-color: #f5c400;
+        border: 2px solid #f5c400;
         font-size: 1.05rem;
-        font-weight: 700;
+        font-weight: 800;
         letter-spacing: 1px;
     }
 
-    .btn-start:hover {
-        background-color: #22b956;
-        color: #07112c;
+    .btn-start:hover,
+    .btn-start:focus {
+        color: #001d3d;
+        background-color: #d9ac00;
+        border-color: #d9ac00;
     }
 
     .btn-map {
         min-height: 48px;
-        border-color: #27d66b;
-        color: #27d66b;
-        font-weight: 600;
-    }
-
-    .btn-map:hover {
-        background-color: #27d66b;
-        color: #07112c;
-    }
-
-    .active-header {
-        background-color: #159447;
-        color: white;
-    }
-
-    .active-time {
-        color: #27d66b;
-        font-size: 1.5rem;
+        color: #f5c400;
+        background-color: transparent;
+        border: 2px solid #f5c400;
         font-weight: 700;
     }
 
+    .btn-map:hover,
+    .btn-map:focus {
+        color: #001d3d;
+        background-color: #f5c400;
+        border-color: #f5c400;
+    }
+
+    .active-header {
+        color: white;
+        background-color: #0057b8;
+        border-bottom: 3px solid #f5c400;
+    }
+
+    .active-time {
+        color: #f5c400;
+        font-size: 1.5rem;
+        font-weight: 800;
+    }
+
+    .time-container {
+        color: white;
+        background-color: #001d3d;
+        border: 1px solid rgba(245, 196, 0, 0.25);
+    }
+
     .navigation-card {
-        border: 1px solid rgba(
-            255,
-            255,
-            255,
-            0.12
-        );
+        background-color: #002b5c;
+        border: 1px solid rgba(245, 196, 0, 0.45);
         border-radius: 18px;
-        background-color: #101755;
         overflow: hidden;
     }
 
@@ -137,54 +158,71 @@
         padding: 15px 18px;
         color: white;
         text-decoration: none;
-        border-bottom: 1px solid rgba(
-            255,
-            255,
-            255,
-            0.10
-        );
+        border-bottom:
+            1px solid rgba(245, 196, 0, 0.20);
     }
 
-    .navigation-link:last-child {
-        border-bottom: none;
-    }
-
-    .navigation-link:hover {
-        color: #27d66b;
-        background-color: rgba(
-            255,
-            255,
-            255,
-            0.04
-        );
+    .navigation-link:hover,
+    .navigation-link:focus {
+        color: #001d3d;
+        background-color: #f5c400;
     }
 
     .navigation-icon {
-        color: #27d66b;
+        color: #f5c400;
         font-size: 1.25rem;
+        font-weight: 800;
+    }
+
+    .navigation-link:hover .navigation-icon,
+    .navigation-link:focus .navigation-icon {
+        color: #001d3d;
+    }
+
+    .logout-form {
+        margin: 0;
     }
 
     .logout-button {
         width: 100%;
         padding: 15px 18px;
-        border: none;
+        color: #ffb4bc;
         background-color: transparent;
-        color: #ff6b6b;
+        border: none;
         text-align: left;
     }
 
-    .logout-button:hover {
-        background-color: rgba(
-            255,
-            255,
-            255,
-            0.04
-        );
+    .logout-button:hover,
+    .logout-button:focus {
+        color: white;
+        background-color: #dc3545;
+    }
+
+    @media (max-width: 576px) {
+        .panel-container {
+            padding: 16px 12px 30px;
+        }
+
+        .panel-header {
+            align-items: flex-start !important;
+        }
+
+        .brand-title {
+            font-size: 1.55rem;
+        }
+
+        .summary-card,
+        .selection-card,
+        .active-card,
+        .navigation-card {
+            border-radius: 14px;
+        }
     }
 {% endblock %}
 
 {% block content %}
 <main class="panel-container">
+
     <header
         class="panel-header d-flex
                justify-content-between
@@ -224,8 +262,10 @@
 
     <section class="summary-card shadow mb-3">
         <div class="card-body p-4">
+
             <div class="row align-items-center">
                 <div class="col-7">
+
                     <div class="text-white-50">
                         Vehículos registrados
                     </div>
@@ -233,27 +273,31 @@
                     <div class="summary-number">
                         {{ cantidad_vehiculos }}
                     </div>
+
                 </div>
 
                 <div class="col-5 text-end">
                     <a
                         href="{% url 'vehiculos:mis_vehiculos' %}"
-                        class="btn btn-outline-light"
+                        class="btn btn-admin"
                     >
                         Administrar
                     </a>
                 </div>
             </div>
+
         </div>
     </section>
 
     {% for estacionamiento in estacionamientos_activos %}
+
         <section
             class="active-card shadow mb-3
                    estacionamiento-activo"
             data-inicio="{{ estacionamiento.fecha_inicio|date:'c' }}"
         >
             <header class="active-header p-3">
+
                 <div
                     class="d-flex justify-content-between
                            align-items-center"
@@ -262,14 +306,17 @@
                         {{ estacionamiento.vehiculo.chapa }}
                     </strong>
 
-                    <span class="badge bg-light text-success">
+                    <span class="badge bg-light text-primary">
                         ACTIVO
                     </span>
                 </div>
+
             </header>
 
             <div class="card-body p-4">
+
                 <dl class="row mb-3">
+
                     <dt class="col-4 text-white-50">
                         Zona
                     </dt>
@@ -295,11 +342,12 @@
                         {{ estacionamiento.tarifa_aplicada|numero_py }}
                         por hora
                     </dd>
+
                 </dl>
 
                 <div
-                    class="text-center p-3 rounded mb-3"
-                    style="background-color:#070b3d;"
+                    class="time-container text-center
+                           p-3 rounded mb-3"
                 >
                     <div class="text-white-50">
                         Tiempo transcurrido
@@ -327,12 +375,15 @@
                         Finalizar estacionamiento
                     </button>
                 </form>
+
             </div>
         </section>
 
     {% empty %}
+
         <section class="selection-card shadow mb-3">
             <div class="card-body p-4">
+
                 <h2 class="h5 mb-4">
                     Iniciar estacionamiento
                 </h2>
@@ -345,6 +396,7 @@
                     {% csrf_token %}
 
                     <div class="mb-3">
+
                         <label
                             for="{{ form.vehiculo.id_for_label }}"
                             class="form-label"
@@ -355,15 +407,15 @@
                         {{ form.vehiculo }}
 
                         {% for error in form.vehiculo.errors %}
-                            <div
-                                class="text-warning small mt-1"
-                            >
+                            <div class="text-warning small mt-1">
                                 {{ error }}
                             </div>
                         {% endfor %}
+
                     </div>
 
                     <div class="mb-2">
+
                         <label
                             for="{{ form.zona.id_for_label }}"
                             class="form-label"
@@ -374,12 +426,11 @@
                         {{ form.zona }}
 
                         {% for error in form.zona.errors %}
-                            <div
-                                class="text-warning small mt-1"
-                            >
+                            <div class="text-warning small mt-1">
                                 {{ error }}
                             </div>
                         {% endfor %}
+
                     </div>
 
                     <a
@@ -390,13 +441,16 @@
                     </a>
 
                     {% if form.vehiculo.field.queryset.exists %}
+
                         <button
                             type="submit"
                             class="btn btn-start w-100"
                         >
                             INICIAR ESTACIONAMIENTO
                         </button>
+
                     {% else %}
+
                         <div class="alert alert-warning">
                             No tienes vehículos disponibles.
                         </div>
@@ -407,19 +461,26 @@
                         >
                             Registrar vehículo
                         </a>
+
                     {% endif %}
+
                 </form>
             </div>
         </section>
+
     {% endfor %}
 
     <nav class="navigation-card shadow">
+
         <a
             href="{% url 'vehiculos:mis_vehiculos' %}"
             class="navigation-link"
         >
             <span>Mis vehículos</span>
-            <span class="navigation-icon">›</span>
+
+            <span class="navigation-icon">
+                ›
+            </span>
         </a>
 
         <a
@@ -427,7 +488,10 @@
             class="navigation-link"
         >
             <span>Zonas y mapa</span>
-            <span class="navigation-icon">›</span>
+
+            <span class="navigation-icon">
+                ›
+            </span>
         </a>
 
         <a
@@ -435,12 +499,27 @@
             class="navigation-link"
         >
             <span>Historial de movimientos</span>
-            <span class="navigation-icon">›</span>
+
+            <span class="navigation-icon">
+                ›
+            </span>
+        </a>
+
+        <a
+            href="{% url 'infracciones:mis_infracciones' %}"
+            class="navigation-link"
+        >
+            <span>Mis infracciones</span>
+
+            <span class="navigation-icon">
+                ›
+            </span>
         </a>
 
         <form
             method="post"
             action="{% url 'usuarios:logout' %}"
+            class="logout-form"
         >
             {% csrf_token %}
 
@@ -451,6 +530,7 @@
                 Cerrar sesión
             </button>
         </form>
+
     </nav>
 </main>
 {% endblock %}
@@ -495,9 +575,13 @@
                 )
                 .join(":");
 
-            tarjeta.querySelector(
+            const elementoTiempo = tarjeta.querySelector(
                 ".tiempo-activo"
-            ).textContent = tiempo;
+            );
+
+            if (elementoTiempo) {
+                elementoTiempo.textContent = tiempo;
+            }
         });
     }
 

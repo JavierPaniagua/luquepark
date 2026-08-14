@@ -5,53 +5,195 @@
 {% endblock %}
 
 {% block extra_css %}
+    body {
+        min-height: 100vh;
+        background: linear-gradient(
+            160deg,
+            #001d3d 0%,
+            #002b5c 55%,
+            #0057b8 100%
+        );
+        background-attachment: fixed;
+    }
+
     .page-container {
-        max-width: 560px;
-        margin: 35px auto;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 25px 0 40px;
+    }
+
+    .back-button {
+        min-height: 44px;
+        color: #f5c400;
+        background-color: transparent;
+        border: 2px solid #f5c400;
+        font-weight: 700;
+    }
+
+    .back-button:hover,
+    .back-button:focus {
+        color: #001d3d;
+        background-color: #f5c400;
+        border-color: #f5c400;
     }
 
     .vehicle-card {
-        border: none;
+        color: white;
+        background-color: #002b5c;
+        border: 1px solid rgba(245, 196, 0, 0.45);
         border-radius: 20px;
         overflow: hidden;
     }
 
     .vehicle-header {
-        background-color: #0d6efd;
+        padding: 26px;
         color: white;
+        background-color: #0057b8;
+        border-bottom: 4px solid #f5c400;
+        text-align: center;
+    }
+
+    .vehicle-title {
+        margin-bottom: 4px;
+        color: #f5c400;
+        font-size: 1.8rem;
+        font-weight: 800;
+    }
+
+    .vehicle-subtitle {
+        color: rgba(255, 255, 255, 0.84);
+    }
+
+    .form-label {
+        color: #f5c400;
+        font-weight: 700;
+    }
+
+    .vehicle-card input,
+    .vehicle-card select,
+    .vehicle-card textarea {
+        display: block;
+        width: 100%;
+        min-height: 48px;
+        padding: 10px 13px;
+        color: white;
+        background-color: #001d3d;
+        border: 1px solid rgba(245, 196, 0, 0.55);
+        border-radius: 10px;
+        font-size: 1rem;
+    }
+
+    .vehicle-card input::placeholder,
+    .vehicle-card textarea::placeholder {
+        color: rgba(255, 255, 255, 0.55);
+    }
+
+    .vehicle-card input:focus,
+    .vehicle-card select:focus,
+    .vehicle-card textarea:focus {
+        color: white;
+        background-color: #001d3d;
+        border-color: #f5c400;
+        outline: none;
+        box-shadow:
+            0 0 0 0.25rem rgba(245, 196, 0, 0.20);
+    }
+
+    .vehicle-card select option {
+        color: white;
+        background-color: #001d3d;
+    }
+
+    .form-text {
+        color: rgba(255, 255, 255, 0.62);
+    }
+
+    .field-error {
+        margin-top: 6px;
+        color: #ffb4bc;
+        font-size: 0.9rem;
+        font-weight: 600;
     }
 
     .btn-save {
-        min-height: 52px;
+        min-height: 56px;
+        color: #001d3d;
+        background-color: #f5c400;
+        border: 2px solid #f5c400;
         font-size: 1.05rem;
-        font-weight: 600;
+        font-weight: 800;
+    }
+
+    .btn-save:hover,
+    .btn-save:focus {
+        color: #001d3d;
+        background-color: #d9ac00;
+        border-color: #d9ac00;
+    }
+
+    @media (max-width: 576px) {
+        .page-container {
+            padding-top: 16px;
+        }
+
+        .vehicle-card {
+            border-radius: 14px;
+        }
+
+        .vehicle-header {
+            padding: 22px 18px;
+        }
+
+        .vehicle-title {
+            font-size: 1.55rem;
+        }
+
+        .vehicle-body {
+            padding: 22px 18px !important;
+        }
     }
 {% endblock %}
 
 {% block content %}
 <main class="container px-3">
     <div class="page-container">
+
         <div class="mb-3">
             <a
                 href="{% url 'vehiculos:mis_vehiculos' %}"
-                class="btn btn-outline-secondary"
+                class="btn back-button"
             >
                 Volver a mis vehículos
             </a>
         </div>
 
-        <section class="card vehicle-card shadow">
-            <header class="vehicle-header p-4 text-center">
-                <h1 class="h3 mb-1">
+        <section class="vehicle-card shadow">
+
+            <header class="vehicle-header">
+
+                <h1 class="vehicle-title">
                     Registrar vehículo
                 </h1>
 
-                <p class="mb-0">
+                <p class="vehicle-subtitle mb-0">
                     Agrega un vehículo a tu cuenta
                 </p>
+
             </header>
 
-            <div class="card-body p-4">
+            <div class="card-body vehicle-body p-4">
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div
+                            class="alert alert-{{ message.tags }}"
+                            role="alert"
+                        >
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
                 {% if form.non_field_errors %}
                     <div class="alert alert-danger">
                         {{ form.non_field_errors }}
@@ -63,9 +205,10 @@
 
                     {% for field in form %}
                         <div class="mb-3">
+
                             <label
                                 for="{{ field.id_for_label }}"
-                                class="form-label fw-semibold"
+                                class="form-label"
                             >
                                 {{ field.label }}
                             </label>
@@ -79,23 +222,22 @@
                             {% endif %}
 
                             {% for error in field.errors %}
-                                <div
-                                    class="text-danger small mt-1"
-                                >
+                                <div class="field-error">
                                     {{ error }}
                                 </div>
                             {% endfor %}
+
                         </div>
                     {% endfor %}
 
                     <button
                         type="submit"
-                        class="btn btn-primary
-                               btn-save w-100"
+                        class="btn btn-save w-100"
                     >
                         Guardar vehículo
                     </button>
                 </form>
+
             </div>
         </section>
     </div>

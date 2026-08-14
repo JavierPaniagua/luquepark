@@ -11,4 +11,10 @@ urlpatterns = [
         views.registrar_infraccion,
         name="registrar",
     ),
+
+    path(
+    "mis-infracciones/",
+    views.mis_infracciones,
+    name="mis_infracciones",
+),
 ]

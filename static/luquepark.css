@@ -1,0 +1,518 @@
+/* =========================================================
+   LUQUEPARK
+   Identidad visual azul y oro de Luque
+   ========================================================= */
+
+:root {
+    --luque-azul: #0057b8;
+    --luque-azul-medio: #064f9d;
+    --luque-azul-oscuro: #002b5c;
+    --luque-azul-profundo: #001d3d;
+
+    --luque-oro: #f5c400;
+    --luque-oro-claro: #ffdc48;
+    --luque-oro-oscuro: #d9ac00;
+
+    --luque-blanco: #ffffff;
+    --luque-fondo: #f3f6fa;
+    --luque-texto: #172033;
+    --luque-gris: #6c757d;
+    --luque-borde: #d9e1ea;
+
+    --luque-exito: #198754;
+    --luque-peligro: #dc3545;
+    --luque-advertencia: #f5c400;
+
+    --luque-sombra:
+        0 8px 24px rgba(0, 43, 92, 0.12);
+}
+
+/* =========================================================
+   ESTRUCTURA GENERAL
+   ========================================================= */
+
+html {
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    color: var(--luque-texto);
+    background-color: var(--luque-fondo);
+    font-family:
+        system-ui,
+        -apple-system,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+}
+
+a {
+    color: var(--luque-azul);
+}
+
+a:hover {
+    color: var(--luque-azul-oscuro);
+}
+
+::selection {
+    color: var(--luque-azul-profundo);
+    background-color: var(--luque-oro);
+}
+
+/* =========================================================
+   ENCABEZADO Y NAVEGACIÓN
+   ========================================================= */
+
+.luquepark-navbar,
+.navbar-luquepark {
+    color: var(--luque-blanco);
+    background-color: var(--luque-azul-oscuro);
+    border-bottom: 4px solid var(--luque-oro);
+}
+
+.luquepark-navbar .navbar-brand,
+.navbar-luquepark .navbar-brand {
+    color: var(--luque-oro);
+    font-weight: 800;
+    letter-spacing: 0.4px;
+}
+
+.luquepark-navbar .nav-link,
+.navbar-luquepark .nav-link {
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.luquepark-navbar .nav-link:hover,
+.luquepark-navbar .nav-link:focus,
+.navbar-luquepark .nav-link:hover,
+.navbar-luquepark .nav-link:focus {
+    color: var(--luque-oro);
+}
+
+.luquepark-header {
+    padding: 1.25rem;
+    color: var(--luque-blanco);
+    background:
+        linear-gradient(
+            135deg,
+            var(--luque-azul-profundo),
+            var(--luque-azul)
+        );
+    border-bottom: 4px solid var(--luque-oro);
+}
+
+.luquepark-brand {
+    margin: 0;
+    color: var(--luque-oro);
+    font-weight: 800;
+}
+
+/* =========================================================
+   TÍTULOS
+   ========================================================= */
+
+.page-title {
+    color: var(--luque-azul-oscuro);
+    font-weight: 800;
+}
+
+.section-title {
+    color: var(--luque-azul-oscuro);
+    font-weight: 700;
+}
+
+.title-accent {
+    padding-bottom: 0.5rem;
+    border-bottom: 3px solid var(--luque-oro);
+}
+
+/* =========================================================
+   TARJETAS
+   ========================================================= */
+
+.card {
+    border: 1px solid var(--luque-borde);
+    border-radius: 16px;
+    box-shadow: var(--luque-sombra);
+}
+
+.card-header {
+    color: var(--luque-blanco);
+    background-color: var(--luque-azul-oscuro);
+    border-bottom: 3px solid var(--luque-oro);
+}
+
+.card-header:first-child {
+    border-radius: 15px 15px 0 0;
+}
+
+.card-title {
+    color: var(--luque-azul-oscuro);
+    font-weight: 700;
+}
+
+.luque-card {
+    color: var(--luque-blanco);
+    background-color: var(--luque-azul-oscuro);
+    border: 1px solid rgba(245, 196, 0, 0.4);
+}
+
+.luque-card .card-title {
+    color: var(--luque-oro);
+}
+
+/* =========================================================
+   BOTONES
+   ========================================================= */
+
+.btn-primary {
+    color: var(--luque-blanco);
+    background-color: var(--luque-azul);
+    border-color: var(--luque-azul);
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    color: var(--luque-blanco) !important;
+    background-color: var(--luque-azul-oscuro) !important;
+    border-color: var(--luque-azul-oscuro) !important;
+}
+
+.btn-warning,
+.btn-luque-oro {
+    color: var(--luque-azul-profundo);
+    background-color: var(--luque-oro);
+    border-color: var(--luque-oro);
+    font-weight: 700;
+}
+
+.btn-warning:hover,
+.btn-warning:focus,
+.btn-luque-oro:hover,
+.btn-luque-oro:focus {
+    color: var(--luque-azul-profundo);
+    background-color: var(--luque-oro-oscuro);
+    border-color: var(--luque-oro-oscuro);
+}
+
+.btn-outline-primary {
+    color: var(--luque-azul);
+    border-color: var(--luque-azul);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+    color: var(--luque-blanco);
+    background-color: var(--luque-azul);
+    border-color: var(--luque-azul);
+}
+
+.btn-outline-warning,
+.btn-outline-luque {
+    color: var(--luque-oro-oscuro);
+    border-color: var(--luque-oro);
+    font-weight: 600;
+}
+
+.btn-outline-warning:hover,
+.btn-outline-warning:focus,
+.btn-outline-luque:hover,
+.btn-outline-luque:focus {
+    color: var(--luque-azul-profundo);
+    background-color: var(--luque-oro);
+    border-color: var(--luque-oro);
+}
+
+.btn-success {
+    font-weight: 600;
+}
+
+.btn-action {
+    min-height: 48px;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+/* =========================================================
+   FORMULARIOS
+   ========================================================= */
+
+.form-label {
+    color: var(--luque-azul-oscuro);
+    font-weight: 600;
+}
+
+.form-control,
+.form-select {
+    min-height: 46px;
+    border: 1px solid var(--luque-borde);
+    border-radius: 10px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--luque-azul);
+    box-shadow:
+        0 0 0 0.25rem rgba(0, 87, 184, 0.18);
+}
+
+.form-check-input:checked {
+    background-color: var(--luque-azul);
+    border-color: var(--luque-azul);
+}
+
+.input-group-text {
+    color: var(--luque-azul-oscuro);
+    background-color: var(--luque-oro);
+    border-color: var(--luque-oro);
+    font-weight: 600;
+}
+
+/* =========================================================
+   TABLAS Y REPORTES
+   ========================================================= */
+
+.table {
+    background-color: var(--luque-blanco);
+}
+
+.table thead th {
+    color: var(--luque-blanco);
+    background-color: var(--luque-azul-oscuro);
+    border-bottom: 3px solid var(--luque-oro);
+    vertical-align: middle;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+    background-color: rgba(0, 87, 184, 0.04);
+}
+
+.table-hover > tbody > tr:hover > * {
+    background-color: rgba(245, 196, 0, 0.12);
+}
+
+.report-number {
+    color: var(--luque-azul);
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+.report-money {
+    color: var(--luque-azul);
+    font-size: 1.55rem;
+    font-weight: 800;
+}
+
+/* =========================================================
+   INSIGNIAS Y ESTADOS
+   ========================================================= */
+
+.badge.bg-primary {
+    background-color: var(--luque-azul) !important;
+}
+
+.badge.bg-warning {
+    color: var(--luque-azul-profundo) !important;
+    background-color: var(--luque-oro) !important;
+}
+
+.status-active {
+    color: var(--luque-blanco);
+    background-color: var(--luque-exito);
+}
+
+.status-finished {
+    color: var(--luque-blanco);
+    background-color: var(--luque-azul);
+}
+
+.status-pending {
+    color: var(--luque-azul-profundo);
+    background-color: var(--luque-oro);
+}
+
+/* =========================================================
+   MENSAJES
+   ========================================================= */
+
+.alert-primary,
+.alert-info {
+    color: var(--luque-azul-profundo);
+    background-color: #dcecff;
+    border-color: var(--luque-azul);
+}
+
+.alert-warning {
+    color: var(--luque-azul-profundo);
+    background-color: #fff5bf;
+    border-color: var(--luque-oro);
+}
+
+/* =========================================================
+   PAGINACIÓN
+   ========================================================= */
+
+.page-link {
+    color: var(--luque-azul);
+}
+
+.page-link:hover {
+    color: var(--luque-azul-oscuro);
+    background-color: #e6f0fb;
+}
+
+.active > .page-link,
+.page-link.active {
+    color: var(--luque-azul-profundo);
+    background-color: var(--luque-oro);
+    border-color: var(--luque-oro);
+}
+
+/* =========================================================
+   PANEL MÓVIL DEL CONDUCTOR E INSPECTOR
+   ========================================================= */
+
+.mobile-panel {
+    min-height: 100vh;
+    color: var(--luque-blanco);
+    background:
+        linear-gradient(
+            160deg,
+            var(--luque-azul-profundo) 0%,
+            var(--luque-azul-oscuro) 58%,
+            var(--luque-azul) 100%
+        );
+    background-attachment: fixed;
+}
+
+.mobile-panel .panel-header {
+    color: var(--luque-blanco);
+    border-bottom: 3px solid var(--luque-oro);
+}
+
+.mobile-panel .brand-title {
+    color: var(--luque-oro);
+}
+
+.mobile-panel .summary-card,
+.mobile-panel .selection-card,
+.mobile-panel .active-card,
+.mobile-panel .navigation-card {
+    color: var(--luque-blanco);
+    background-color: rgba(0, 43, 92, 0.96);
+    border: 1px solid rgba(245, 196, 0, 0.4);
+}
+
+.mobile-panel .summary-number,
+.mobile-panel .active-time,
+.mobile-panel .navigation-icon {
+    color: var(--luque-oro);
+}
+
+.mobile-panel .form-label {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.mobile-panel .form-control,
+.mobile-panel .form-select {
+    color: var(--luque-blanco);
+    background-color: var(--luque-azul-profundo);
+    border-color: rgba(245, 196, 0, 0.55);
+}
+
+.mobile-panel .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.mobile-panel .form-select option {
+    color: var(--luque-blanco);
+    background-color: var(--luque-azul-profundo);
+}
+
+.mobile-panel .navigation-link {
+    color: var(--luque-blanco);
+    border-bottom: 1px solid rgba(245, 196, 0, 0.2);
+}
+
+.mobile-panel .navigation-link:hover {
+    color: var(--luque-azul-profundo);
+    background-color: var(--luque-oro);
+}
+
+.mobile-panel .navigation-link:hover .navigation-icon {
+    color: var(--luque-azul-profundo);
+}
+
+/* =========================================================
+   MAPA LEAFLET
+   ========================================================= */
+
+#map,
+.mapa-luquepark {
+    border: 3px solid var(--luque-azul);
+    border-radius: 14px;
+    box-shadow: var(--luque-sombra);
+}
+
+.leaflet-popup-content-wrapper {
+    border-radius: 12px;
+    border-top: 5px solid var(--luque-oro);
+}
+
+.leaflet-popup-content strong {
+    color: var(--luque-azul-oscuro);
+}
+
+.leaflet-control-zoom a {
+    color: var(--luque-azul-oscuro) !important;
+}
+
+.map-legend {
+    padding: 12px 15px;
+    color: var(--luque-blanco);
+    background-color: var(--luque-azul-oscuro);
+    border-left: 5px solid var(--luque-oro);
+    border-radius: 10px;
+}
+
+/* =========================================================
+   PIE DE PÁGINA
+   ========================================================= */
+
+.luquepark-footer {
+    padding: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    background-color: var(--luque-azul-profundo);
+    border-top: 3px solid var(--luque-oro);
+}
+
+/* =========================================================
+   PANTALLAS PEQUEÑAS
+   ========================================================= */
+
+@media (max-width: 576px) {
+    .page-title {
+        font-size: 1.6rem;
+    }
+
+    .card {
+        border-radius: 13px;
+    }
+
+    .btn-action {
+        width: 100%;
+    }
+
+    .table-responsive {
+        font-size: 0.9rem;
+    }
+
+    .panel-container {
+        padding-right: 12px;
+        padding-left: 12px;
+    }
+}

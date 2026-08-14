@@ -5,19 +5,64 @@
 {% endblock %}
 
 {% block extra_css %}
+    body {
+        min-height: 100vh;
+        background: linear-gradient(
+            160deg,
+            #001d3d 0%,
+            #002b5c 55%,
+            #0057b8 100%
+        );
+        background-attachment: fixed;
+    }
+
     .page-container {
-        max-width: 650px;
-        margin: 30px auto;
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 25px 0 40px;
+    }
+
+    .page-header {
+        padding-bottom: 16px;
+        border-bottom: 3px solid #f5c400;
+    }
+
+    .page-title {
+        color: #f5c400;
+        font-size: 1.9rem;
+        font-weight: 800;
+    }
+
+    .user-name {
+        color: rgba(255, 255, 255, 0.72);
+    }
+
+    .btn-add {
+        min-height: 46px;
+        padding: 10px 20px;
+        color: #001d3d;
+        background-color: #f5c400;
+        border: 2px solid #f5c400;
+        font-weight: 800;
+    }
+
+    .btn-add:hover,
+    .btn-add:focus {
+        color: #001d3d;
+        background-color: #d9ac00;
+        border-color: #d9ac00;
     }
 
     .vehicle-card {
-        border: none;
+        color: white;
+        background-color: #002b5c;
+        border: 1px solid rgba(245, 196, 0, 0.45);
         border-radius: 18px;
         overflow: hidden;
     }
 
     .vehicle-active {
-        border-left: 7px solid #198754;
+        border-left: 7px solid #f5c400;
     }
 
     .vehicle-inactive {
@@ -25,33 +70,143 @@
     }
 
     .chapa {
-        font-size: 1.55rem;
-        font-weight: 700;
+        color: #f5c400;
+        font-size: 1.65rem;
+        font-weight: 800;
         letter-spacing: 2px;
+    }
+
+    .vehicle-divider {
+        margin: 16px 0;
+        border-color: rgba(245, 196, 0, 0.35);
+        opacity: 1;
+    }
+
+    .vehicle-details dt {
+        color: #f5c400;
+        font-weight: 700;
+    }
+
+    .vehicle-details dd {
+        color: white;
+    }
+
+    .status-active {
+        color: #001d3d;
+        background-color: #f5c400;
+        font-weight: 800;
+    }
+
+    .status-inactive {
+        color: white;
+        background-color: #6c757d;
+        font-weight: 700;
+    }
+
+    .empty-card {
+        color: white;
+        background-color: #002b5c;
+        border: 1px solid rgba(245, 196, 0, 0.45);
+        border-radius: 18px;
+    }
+
+    .empty-title {
+        color: #f5c400;
+    }
+
+    .navigation-card {
+        margin-top: 22px;
+        background-color: #002b5c;
+        border: 1px solid rgba(245, 196, 0, 0.45);
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    .navigation-link {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 18px;
+        color: white;
+        text-decoration: none;
+        border-bottom:
+            1px solid rgba(245, 196, 0, 0.20);
+    }
+
+    .navigation-link:hover,
+    .navigation-link:focus {
+        color: #001d3d;
+        background-color: #f5c400;
+    }
+
+    .navigation-icon {
+        color: #f5c400;
+        font-size: 1.3rem;
+        font-weight: 800;
+    }
+
+    .navigation-link:hover .navigation-icon {
+        color: #001d3d;
+    }
+
+    .logout-form {
+        margin: 0;
+    }
+
+    .logout-button {
+        width: 100%;
+        padding: 15px 18px;
+        color: #ffb4bc;
+        background-color: transparent;
+        border: none;
+        text-align: left;
+    }
+
+    .logout-button:hover,
+    .logout-button:focus {
+        color: white;
+        background-color: #dc3545;
+    }
+
+    @media (max-width: 576px) {
+        .page-container {
+            padding-top: 16px;
+        }
+
+        .page-title {
+            font-size: 1.55rem;
+        }
+
+        .vehicle-card,
+        .empty-card,
+        .navigation-card {
+            border-radius: 14px;
+        }
     }
 {% endblock %}
 
 {% block content %}
 <main class="container px-3">
     <div class="page-container">
-        <header class="mb-4">
+
+        <header class="page-header mb-4">
             <div
                 class="d-flex justify-content-between
                        align-items-center gap-3"
             >
                 <div>
-                    <h1 class="h3 mb-1">
+                    <h1 class="page-title mb-1">
                         Mis vehículos
                     </h1>
 
-                    <p class="text-muted mb-0">
+                    <p class="user-name mb-0">
                         {{ request.user.get_full_name|default:request.user.username }}
                     </p>
                 </div>
 
                 <a
                     href="{% url 'vehiculos:registrar' %}"
-                    class="btn btn-primary"
+                    class="btn btn-add"
                 >
                     Agregar
                 </a>
@@ -69,10 +224,12 @@
             {% endfor %}
         {% endif %}
 
-        <div class="d-grid gap-3">
+        <section class="d-grid gap-3">
+
             {% for vehiculo in vehiculos %}
+
                 <article
-                    class="card vehicle-card shadow-sm
+                    class="vehicle-card shadow
                     {% if vehiculo.activo %}
                         vehicle-active
                     {% else %}
@@ -80,6 +237,7 @@
                     {% endif %}"
                 >
                     <div class="card-body p-4">
+
                         <div
                             class="d-flex justify-content-between
                                    align-items-start gap-3"
@@ -89,19 +247,20 @@
                             </div>
 
                             {% if vehiculo.activo %}
-                                <span class="badge bg-success">
+                                <span class="badge status-active">
                                     ACTIVO
                                 </span>
                             {% else %}
-                                <span class="badge bg-secondary">
+                                <span class="badge status-inactive">
                                     INACTIVO
                                 </span>
                             {% endif %}
                         </div>
 
-                        <hr>
+                        <hr class="vehicle-divider">
 
-                        <dl class="row mb-0">
+                        <dl class="row mb-0 vehicle-details">
+
                             <dt class="col-4">
                                 Tipo
                             </dt>
@@ -133,56 +292,79 @@
                             <dd class="col-8">
                                 {{ vehiculo.color|default:"—" }}
                             </dd>
+
                         </dl>
                     </div>
                 </article>
 
             {% empty %}
-                <div class="card border-0 shadow-sm">
+
+                <section class="empty-card shadow">
                     <div class="card-body p-5 text-center">
-                        <h2 class="h5">
+
+                        <h2 class="empty-title h5">
                             Todavía no tienes vehículos
                         </h2>
 
-                        <p class="text-muted">
-                            Registra tu primer vehículo para
-                            utilizar LuquePark.
+                        <p class="text-white-50">
+                            Registra tu primer vehículo para utilizar LuquePark.
                         </p>
 
                         <a
                             href="{% url 'vehiculos:registrar' %}"
-                            class="btn btn-primary
-                                   btn-action w-100"
+                            class="btn btn-add btn-action w-100"
                         >
                             Registrar mi vehículo
                         </a>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
 
-        <nav class="mt-4 d-grid gap-2">
+                    </div>
+                </section>
+
+            {% endfor %}
+
+        </section>
+
+        <nav class="navigation-card shadow">
+
             <a
                 href="{% url 'estacionamientos:activos' %}"
-                class="btn btn-outline-primary btn-action"
+                class="navigation-link"
             >
-                Mis estacionamientos
+                <span>Mis estacionamientos</span>
+                <span class="navigation-icon">›</span>
+            </a>
+
+            <a
+                href="{% url 'zonas:mapa' %}"
+                class="navigation-link"
+            >
+                <span>Zonas y mapa</span>
+                <span class="navigation-icon">›</span>
+            </a>
+
+            <a
+                href="{% url 'infracciones:mis_infracciones' %}"
+                class="navigation-link"
+            >
+                <span>Mis infracciones</span>
+                <span class="navigation-icon">›</span>
             </a>
 
             <form
                 method="post"
                 action="{% url 'usuarios:logout' %}"
+                class="logout-form"
             >
                 {% csrf_token %}
 
                 <button
                     type="submit"
-                    class="btn btn-outline-danger
-                           btn-action w-100"
+                    class="logout-button"
                 >
                     Cerrar sesión
                 </button>
             </form>
+
         </nav>
     </div>
 </main>

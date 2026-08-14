@@ -1,71 +1,266 @@
 {% extends "base.html" %}
+{% load moneda %}
 
 {% block title %}
     Historial | LuquePark
 {% endblock %}
 
 {% block extra_css %}
+    body {
+        min-height: 100vh;
+        background: linear-gradient(
+            160deg,
+            #001d3d 0%,
+            #002b5c 55%,
+            #0057b8 100%
+        );
+        background-attachment: fixed;
+    }
+
     .page-container {
-        max-width: 760px;
-        margin: 30px auto;
+        width: 100%;
+        max-width: 780px;
+        margin: 0 auto;
+        padding: 25px 0 40px;
+    }
+
+    .page-header {
+        padding-bottom: 16px;
+        border-bottom: 3px solid #f5c400;
+    }
+
+    .page-title {
+        margin-bottom: 3px;
+        color: #f5c400;
+        font-size: 1.9rem;
+        font-weight: 800;
+    }
+
+    .page-subtitle {
+        color: rgba(255, 255, 255, 0.72);
+    }
+
+    .btn-back {
+        min-height: 44px;
+        color: #f5c400;
+        background-color: transparent;
+        border: 2px solid #f5c400;
+        font-weight: 700;
+    }
+
+    .btn-back:hover,
+    .btn-back:focus {
+        color: #001d3d;
+        background-color: #f5c400;
+        border-color: #f5c400;
     }
 
     .history-card {
-        border: none;
-        border-left: 7px solid #0d6efd;
+        color: white;
+        background-color: #002b5c;
+        border: 1px solid rgba(245, 196, 0, 0.45);
+        border-left: 7px solid #f5c400;
         border-radius: 16px;
+        overflow: hidden;
     }
 
     .chapa {
-        font-size: 1.35rem;
-        font-weight: 700;
+        color: #f5c400;
+        font-size: 1.45rem;
+        font-weight: 800;
         letter-spacing: 2px;
+    }
+
+    .status-finished {
+        color: #001d3d;
+        background-color: #f5c400;
+        font-weight: 800;
+    }
+
+    .history-divider {
+        margin: 14px 0;
+        border-color: rgba(245, 196, 0, 0.30);
+        opacity: 1;
+    }
+
+    .history-details dt {
+        color: #f5c400;
+        font-weight: 700;
+    }
+
+    .history-details dd {
+        color: white;
+    }
+
+    .final-amount {
+        color: #f5c400 !important;
+        font-size: 1.08rem;
+        font-weight: 800;
+    }
+
+    .empty-card {
+        color: white;
+        background-color: #002b5c;
+        border: 1px solid rgba(245, 196, 0, 0.45);
+        border-radius: 16px;
+    }
+
+    .empty-title {
+        color: #f5c400;
+        font-weight: 800;
+    }
+
+    .empty-text {
+        color: rgba(255, 255, 255, 0.68);
+    }
+
+    .pagination .page-link {
+        color: #f5c400;
+        background-color: #002b5c;
+        border-color: rgba(245, 196, 0, 0.45);
+    }
+
+    .pagination .page-link:hover,
+    .pagination .page-link:focus {
+        color: #001d3d;
+        background-color: #f5c400;
+        border-color: #f5c400;
+    }
+
+    .pagination .page-item.active .page-link {
+        color: #001d3d;
+        background-color: #f5c400;
+        border-color: #f5c400;
+        font-weight: 800;
+    }
+
+    .bottom-navigation {
+        margin-top: 22px;
+        background-color: #002b5c;
+        border: 1px solid rgba(245, 196, 0, 0.45);
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .navigation-link {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 18px;
+        color: white;
+        text-decoration: none;
+        border-bottom:
+            1px solid rgba(245, 196, 0, 0.20);
+    }
+
+    .navigation-link:last-child {
+        border-bottom: none;
+    }
+
+    .navigation-link:hover,
+    .navigation-link:focus {
+        color: #001d3d;
+        background-color: #f5c400;
+    }
+
+    .navigation-icon {
+        color: #f5c400;
+        font-size: 1.3rem;
+        font-weight: 800;
+    }
+
+    .navigation-link:hover .navigation-icon {
+        color: #001d3d;
+    }
+
+    @media (max-width: 576px) {
+        .page-container {
+            padding-top: 16px;
+            padding-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 1.55rem;
+        }
+
+        .history-card,
+        .empty-card,
+        .bottom-navigation {
+            border-radius: 14px;
+        }
+
+        .history-details dt {
+            width: 47%;
+        }
+
+        .history-details dd {
+            width: 53%;
+        }
     }
 {% endblock %}
 
 {% block content %}
 <main class="container px-3">
     <div class="page-container">
+
         <header
-            class="d-flex justify-content-between
-                   align-items-center mb-4"
+            class="page-header d-flex
+                   justify-content-between
+                   align-items-center gap-3 mb-4"
         >
             <div>
-                <h1 class="h3 mb-1">
+                <h1 class="page-title">
                     Historial
                 </h1>
 
-                <p class="text-muted mb-0">
+                <p class="page-subtitle mb-0">
                     Estacionamientos finalizados
                 </p>
             </div>
 
             <a
                 href="{% url 'estacionamientos:activos' %}"
-                class="btn btn-outline-primary"
+                class="btn btn-back"
             >
                 Volver
             </a>
         </header>
 
-        <div class="d-grid gap-3">
+        {% if messages %}
+            {% for message in messages %}
+                <div
+                    class="alert alert-{{ message.tags }}"
+                    role="alert"
+                >
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <section class="d-grid gap-3">
+
             {% for estacionamiento in pagina %}
-                <article class="card history-card shadow-sm">
+
+                <article class="history-card shadow-lg">
                     <div class="card-body p-4">
+
                         <div
                             class="d-flex justify-content-between
-                                   mb-3"
+                                   align-items-center gap-3"
                         >
                             <span class="chapa">
                                 {{ estacionamiento.vehiculo.chapa }}
                             </span>
 
-                            <span class="badge bg-secondary">
+                            <span class="badge status-finished">
                                 FINALIZADO
                             </span>
                         </div>
 
-                        <dl class="row mb-0">
+                        <hr class="history-divider">
+
+                        <dl class="row mb-0 history-details">
+
                             <dt class="col-5">
                                 Zona
                             </dt>
@@ -104,36 +299,42 @@
 
                             <dd class="col-7">
                                 Gs.
-                                {{ estacionamiento.tarifa_aplicada }}
+                                {{ estacionamiento.tarifa_aplicada|numero_py }}
                             </dd>
 
                             <dt class="col-5">
                                 Monto final
                             </dt>
 
-                            <dd class="col-7 fw-bold text-primary">
+                            <dd class="col-7 final-amount">
                                 Gs.
-                                {{ estacionamiento.monto_final }}
+                                {{ estacionamiento.monto_final|numero_py }}
                             </dd>
+
                         </dl>
                     </div>
                 </article>
 
             {% empty %}
-                <div class="card border-0 shadow-sm">
+
+                <section class="empty-card shadow-lg">
                     <div class="card-body p-5 text-center">
-                        <h2 class="h5">
+
+                        <h2 class="empty-title h5">
                             No tienes historial todavía
                         </h2>
 
-                        <p class="text-muted mb-0">
+                        <p class="empty-text mb-0">
                             Los estacionamientos finalizados
                             aparecerán aquí.
                         </p>
+
                     </div>
-                </div>
+                </section>
+
             {% endfor %}
-        </div>
+
+        </section>
 
         {% if pagina.paginator.num_pages > 1 %}
             <nav
@@ -141,6 +342,7 @@
                 aria-label="Paginación del historial"
             >
                 <ul class="pagination justify-content-center">
+
                     {% if pagina.has_previous %}
                         <li class="page-item">
                             <a
@@ -154,9 +356,8 @@
 
                     <li class="page-item active">
                         <span class="page-link">
-                            {{ pagina.number }}
-                            de
-                            {{ pagina.paginator.num_pages }}
+                            Página {{ pagina.number }}
+                            de {{ pagina.paginator.num_pages }}
                         </span>
                     </li>
 
@@ -170,9 +371,38 @@
                             </a>
                         </li>
                     {% endif %}
+
                 </ul>
             </nav>
         {% endif %}
+
+        <nav class="bottom-navigation shadow">
+
+            <a
+                href="{% url 'estacionamientos:activos' %}"
+                class="navigation-link"
+            >
+                <span>Estacionamientos activos</span>
+                <span class="navigation-icon">›</span>
+            </a>
+
+            <a
+                href="{% url 'vehiculos:mis_vehiculos' %}"
+                class="navigation-link"
+            >
+                <span>Mis vehículos</span>
+                <span class="navigation-icon">›</span>
+            </a>
+
+            <a
+                href="{% url 'zonas:mapa' %}"
+                class="navigation-link"
+            >
+                <span>Zonas y mapa</span>
+                <span class="navigation-icon">›</span>
+            </a>
+
+        </nav>
     </div>
 </main>
 {% endblock %}
