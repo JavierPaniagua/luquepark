@@ -1,4 +1,4 @@
-const CACHE_NAME = "luquepark-pwa-v1";
+const CACHE_NAME = "luquepark-pwa-v2";
 
 const STATIC_FILES = [
     "/static/pwa/manifest.json",
