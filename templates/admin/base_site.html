@@ -1,0 +1,43 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if subtitle %}
+        {{ subtitle }} |
+    {% endif %}
+    LuquePark
+{% endblock %}
+
+{% block extrastyle %}
+    {{ block.super }}
+
+    <link
+        rel="stylesheet"
+        href="{% static 'admin/css/luquepark_admin.css' %}"
+    >
+{% endblock %}
+
+{% block branding %}
+    <h1 id="site-name">
+        <a href="{% url 'admin:index' %}">
+            <span class="brand-luque">
+                Luque
+            </span><span class="brand-park">
+                Park
+            </span>
+
+            <small>
+                Administración
+            </small>
+        </a>
+    </h1>
+{% endblock %}
+
+{% block nav-global %}
+    <a
+        href="{% url 'estacionamientos:reporte_general' %}"
+        class="admin-report-link"
+    >
+        Ver reporte general
+    </a>
+{% endblock %}

@@ -1,17 +1,22 @@
 {
-    "name": "LuquePark",
+    "id": "/",
+    "name": "LuquePark - Estacionamiento Medido",
     "short_name": "LuquePark",
-    "description": "Sistema de Estacionamiento Medido de Luque",
+    "description": "Sistema de Estacionamiento Medido de la ciudad de Luque, Paraguay.",
     "start_url": "/",
     "scope": "/",
     "display": "standalone",
-    "orientation": "portrait",
-    "background_color": "#f4f6f9",
-    "theme_color": "#0d6efd",
+    "orientation": "portrait-primary",
+    "background_color": "#001D3D",
+    "theme_color": "#002B5C",
     "lang": "es-PY",
+    "categories": [
+        "navigation",
+        "utilities"
+    ],
     "icons": [
         {
-            "src": "/static/pwa/icon.svg",
+            "src": "/static/pwa/icon.svg?v=3",
             "sizes": "any",
             "type": "image/svg+xml",
             "purpose": "any maskable"

@@ -1,9 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-    <rect width="512" height="512" rx="100" fill="#0d6efd"></rect>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="titulo descripcion">
+    <title id="titulo">
+        LuquePark
+    </title>
 
-    <circle cx="256" cy="256" r="170" fill="#ffffff"></circle>
+    <desc id="descripcion">
+        Icono azul y oro de LuquePark
+    </desc>
 
-    <text x="256" y="325" text-anchor="middle" font-family="Arial, sans-serif" font-size="210" font-weight="700" fill="#0d6efd">
+    <!-- Fondo azul oscuro -->
+    <rect width="512" height="512" rx="100" fill="#002B5C"></rect>
+
+    <!-- Borde dorado interior -->
+    <rect x="22" y="22" width="468" height="468" rx="82" fill="none" stroke="#F5C400" stroke-width="14"></rect>
+
+    <!-- Círculo dorado -->
+    <circle cx="256" cy="256" r="170" fill="#F5C400"></circle>
+
+    <!-- Letra P de estacionamiento -->
+    <text x="256" y="325" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="210" font-weight="800" fill="#001D3D">
         P
     </text>
 </svg>

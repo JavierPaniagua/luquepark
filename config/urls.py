@@ -2,6 +2,19 @@ from django.contrib import admin
 from django.urls import include, path
 
 
+admin.site.site_header = (
+    "Administración LuquePark"
+)
+
+admin.site.site_title = (
+    "LuquePark"
+)
+
+admin.site.index_title = (
+    "Panel de administración"
+)
+
+
 urlpatterns = [
     path(
         "admin/",
@@ -29,8 +42,7 @@ urlpatterns = [
     ),
 
     path(
-    "infracciones/",
-    include("infracciones.urls"),
-),
-
+        "infracciones/",
+        include("infracciones.urls"),
+    ),
 ]
