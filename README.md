@@ -1,3 +1,5 @@
-.\venv\Scripts\Activate.ps1
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-pip install -r requirements.txt --timeout 120 --retries 10
+:\workspaces\luquepark\venv> python -m pip install -r requirements.txt
+ERROR: Could not open requirements file: [Errno 2] No such file or directory: 'requirements.txt'
+(venv) PS C:\workspaces\luquepark\venv> python -m pip install -r requirements.txt
+ERROR: Could not open requirements file: [Errno 2] No such file or directory: 'requirements.txt'
+(venv) PS C:\workspaces\luquepark\venv> python -m pip install -r requirements.txt
