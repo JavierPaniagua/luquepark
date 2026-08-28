@@ -1,3 +1,1 @@
-.\venv\Scripts\python.exe -m pip install --upgrade pip
-.\venv\Scripts\python.exe -m pip install -r requirements.txt
-Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+.\venv\Scripts\Activate.ps1
